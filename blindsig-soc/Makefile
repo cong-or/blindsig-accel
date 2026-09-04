@@ -7,7 +7,9 @@
 #   make clean        — Remove build artifacts
 
 FW ?= c
-ACCEL_RTL = ../blindsig-rtl/rtl/blindsig_accel.v
+ACCEL_RTL = ../blindsig-rtl/rtl/blindsig_accel.v \
+            ../blindsig-rtl/rtl/redmod.v \
+            ../blindsig-rtl/rtl/mulmod.v
 
 ifeq ($(FW),rust)
   FW_DIR = fw-rust

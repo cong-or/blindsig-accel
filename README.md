@@ -15,18 +15,21 @@ cryptographic work can be built on a de-risked foundation.
 
 **What works today (and is tested in simulation):**
 
-- A memory-mapped accelerator peripheral in Verilog with a clean register interface.
+- A **constant-time modular multiplier** in Verilog (`(a·b) mod m`, bit-serial, fixed
+  cycle count independent of the operands) plus a matching modular reducer.
+- A memory-mapped accelerator peripheral wrapping those datapaths, computing
+  `operand² mod modulus` — no behavioural `*`/`%`, so it is constant-time end to end.
 - A PicoRV32 RISC-V SoC that integrates the accelerator on a memory-mapped bus.
 - C firmware and a bare-metal Rust (`no_std`) driver that drive the accelerator and read
   results back — the full `CPU → bus → accelerator → result` path runs end-to-end.
 
-**What is deliberately a placeholder:** the arithmetic core currently computes
-`operand² mod modulus` on a single machine word (test vector `10² mod 7 = 2`). This
-exercises the register interface, the bus integration, and a **fixed-cycle datapath**,
-but it is *not* the cryptographic core. The real work — a constant-time Montgomery
-modular multiplier for RSA-2048/3072, a modular-exponentiation pipeline, blind Schnorr
-support, SymbiYosys formal verification, and Lattice ECP5 synthesis via the open
-Yosys/nextpnr/Trellis toolchain — is the funded scope ahead.
+**What is single-word today, and is the funded scope ahead:** the arithmetic is real and
+constant-time but operates on a single 32-bit word (test vector `10² mod 7 = 2`). The
+work ahead scales it to full RSA-2048/3072 widths in Montgomery form, chains it into a
+modular-exponentiation pipeline, adds blind Schnorr, formally verifies the arithmetic
+invariants with SymbiYosys, and synthesises to the Lattice ECP5 via the open
+Yosys/nextpnr/Trellis toolchain. The register interface and the `mulmod`/`redmod`
+primitives generalise directly to that work.
 
 The current core also runs on **PicoRV32**; the proposed target core is **VexRiscv**.
 The MMIO integration pattern is identical, so the port is a bus-adapter change.
@@ -37,7 +40,7 @@ The three components are independently useful and each has its own README:
 
 | Directory | What | Reusable as |
 |---|---|---|
-| [`blindsig-rtl/`](blindsig-rtl/) | The accelerator peripheral in Verilog + standalone testbench | A fixed-function MMIO arithmetic peripheral for any SoC |
+| [`blindsig-rtl/`](blindsig-rtl/) | Constant-time modular multiplier + reducer + the accelerator peripheral, with testbenches | `mulmod` is reusable for any modular arithmetic (RSA/DH/ECC/ZK) |
 | [`blindsig-soc/`](blindsig-soc/) | PicoRV32 SoC integrating CPU + accelerator, with C and Rust firmware | An integration reference for wiring an accelerator to a RISC-V core |
 | [`blindsig-fw/`](blindsig-fw/) | Bare-metal Rust (`no_std`) MMIO driver | A firmware driver library for constrained devices |
 

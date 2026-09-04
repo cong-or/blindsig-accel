@@ -1,12 +1,27 @@
 # blindsig-rtl
 
-The blind signature accelerator peripheral in Verilog, with a self-checking testbench.
+The blind signature accelerator peripheral in Verilog, built from constant-time
+modular-arithmetic datapaths, with testbenches.
 
-Computes `operand² mod modulus` (single word, 64-bit intermediate) behind a memory-mapped
-register interface. This is a **placeholder arithmetic core**: it proves the register
-interface and a fixed-cycle datapath, and stands in for the constant-time Montgomery
-modular multiplier and modular-exponentiation pipeline that are the funded work ahead.
-See the [top-level README](../README.md) for the full picture.
+The accelerator computes `operand² mod modulus` over a memory-mapped register
+interface. The arithmetic is done by two bit-serial datapaths — **not** by
+Verilog's behavioural `*`/`%` operators — so the peripheral is constant-time end
+to end. This is single-word (32-bit) today; it is the seed of the full-width
+Montgomery multiplier and modular-exponentiation pipeline that are the work ahead
+(see the [top-level README](../README.md)).
+
+## Modules
+
+| File | What | Notes |
+|---|---|---|
+| `rtl/mulmod.v` | **Constant-time modular multiplier** `(a·b) mod m` | Bit-serial, MSB-first, WIDTH-cycle. Every step does identical work; the "reduce" and "add" choices are muxes, not branches. Reusable for any modular arithmetic. |
+| `rtl/redmod.v` | Constant-time modular reduction `x mod m` | Brings an operand into range (`< m`) before multiplication. |
+| `rtl/blindsig_accel.v` | MMIO peripheral: `operand² mod modulus` | Wraps `redmod → mulmod` behind the register interface. |
+
+**Constant-time** here means: fixed cycle count independent of the operand values,
+no early exit, no data-dependent branching in the datapath. `tb/tb_mulmod.v`
+checks this directly — it asserts every multiplication, from `0` to `(m-1)²`,
+takes the *same* number of cycles.
 
 ## Register interface
 
@@ -17,12 +32,18 @@ Sequence: `reset → load_mod → load_op → start → wait(DONE) → read`.
 ## Build
 
 ```sh
-make        # iverilog + vvp; prints "ALL TESTS PASSED" (4/4)
-make waves  # open the VCD in GTKWave
+make          # runs both testbenches:
+              #   mulmod unit test  → "ALL MULMOD TESTS PASSED (constant N-cycle latency)"
+              #   accelerator test  → "ALL TESTS PASSED" (4/4)
+make mulmod   # just the modular-multiplier unit test
+make sim      # just the end-to-end accelerator test
+make waves    # open the accelerator VCD in GTKWave
 ```
 
-Tests cover the happy path (`10² mod 7 = 2`), the divide-by-zero error flag,
-a second modulus (`15² mod 13 = 4`), and 64-bit intermediate overflow.
+The accelerator tests cover `10² mod 7 = 2`, the divide-by-zero error flag,
+`15² mod 13 = 4`, and a large operand exercising reduction. The mulmod test
+covers small values, zeros, near-16-bit primes, and full 32-bit stress cases
+(e.g. `(m-1)² mod m = 1`).
 
 ## License
 

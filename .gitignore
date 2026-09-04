@@ -7,6 +7,7 @@ target/
 *.vvp
 *.gtkw
 blindsig_tb
+mulmod_tb
 soc.vvp
 sim.log
 

@@ -7,8 +7,16 @@
 //   0x0C  RESULT   R   [31:0]
 //   0x10  MODULUS  W   [31:0]
 //
-// Operation: operand^2 mod modulus (single-word, 64-bit intermediate)
-// State machine: IDLE -> COMPUTING (4 cycles) -> DONE
+// Operation: operand^2 mod modulus (single word).
+//
+// The modular arithmetic is performed by two constant-time datapaths, NOT by
+// Verilog's behavioural `*`/`%` operators:
+//   1. redmod  reduces the operand into range:  a = operand mod modulus
+//   2. mulmod  squares it modulo the modulus:   result = (a * a) mod modulus
+// Both run in a fixed number of cycles independent of the operand values, so
+// the peripheral is constant-time end to end. This single-word core is the
+// seed of the full-width Montgomery multiplier and modexp pipeline; the
+// register interface and the redmod/mulmod primitives generalise directly.
 
 module blindsig_accel (
     input  wire        clk,
@@ -33,25 +41,55 @@ module blindsig_accel (
     localparam CTRL_LOAD_OP  = 2;
     localparam CTRL_LOAD_MOD = 3;
 
-    // State machine
-    localparam S_IDLE      = 2'd0;
-    localparam S_COMPUTING = 2'd1;
-    localparam S_DONE      = 2'd2;
+    // Compute pipeline state
+    localparam C_IDLE   = 2'd0;
+    localparam C_REDUCE = 2'd1;
+    localparam C_MUL    = 2'd2;
+    localparam C_DONE   = 2'd3;
 
-    reg [1:0]  state;
-    reg [2:0]  cycle_count;   // counts computation cycles
+    reg [1:0]  cstate;
     reg [31:0] operand;
     reg [31:0] modulus;
     reg [31:0] result;
+    reg [31:0] a_reduced;       // operand mod modulus
     reg        flag_busy;
     reg        flag_done;
     reg        flag_error;
-    reg        load_op_armed;  // CTRL_LOAD_OP was written
-    reg        load_mod_armed; // CTRL_LOAD_MOD was written
+    reg        load_op_armed;
+    reg        load_mod_armed;
 
-    // 64-bit intermediate for operand^2
-    wire [63:0] square;
-    assign square = {32'b0, operand} * {32'b0, operand};
+    // Start pulses to the arithmetic datapaths
+    reg          redmod_start;
+    reg          mulmod_start;
+    wire [31:0]  redmod_out;
+    wire [31:0]  mulmod_out;
+    wire         redmod_done, mulmod_done;
+    wire         redmod_busy, mulmod_busy;
+
+    // a = operand mod modulus
+    redmod #(.WIDTH(32)) u_redmod (
+        .clk    (clk),
+        .rst_n  (rst_n),
+        .start  (redmod_start),
+        .x      (operand),
+        .m      (modulus),
+        .result (redmod_out),
+        .done   (redmod_done),
+        .busy   (redmod_busy)
+    );
+
+    // result = (a * a) mod modulus
+    mulmod #(.WIDTH(32)) u_mulmod (
+        .clk    (clk),
+        .rst_n  (rst_n),
+        .start  (mulmod_start),
+        .a      (a_reduced),
+        .b      (a_reduced),
+        .m      (modulus),
+        .result (mulmod_out),
+        .done   (mulmod_done),
+        .busy   (mulmod_busy)
+    );
 
     // Combinational read mux
     always @(*) begin
@@ -62,48 +100,51 @@ module blindsig_accel (
         endcase
     end
 
-    // Main sequential logic
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state         <= S_IDLE;
-            cycle_count   <= 3'd0;
-            operand       <= 32'd0;
-            modulus       <= 32'd0;
-            result        <= 32'd0;
-            flag_busy     <= 1'b0;
-            flag_done     <= 1'b0;
-            flag_error    <= 1'b0;
-            load_op_armed <= 1'b0;
+            cstate         <= C_IDLE;
+            operand        <= 32'd0;
+            modulus        <= 32'd0;
+            result         <= 32'd0;
+            a_reduced      <= 32'd0;
+            flag_busy      <= 1'b0;
+            flag_done      <= 1'b0;
+            flag_error     <= 1'b0;
+            load_op_armed  <= 1'b0;
             load_mod_armed <= 1'b0;
+            redmod_start   <= 1'b0;
+            mulmod_start   <= 1'b0;
         end else begin
-            // Handle CTRL writes (action register — each write is a one-shot command)
+            // start signals are one-cycle pulses
+            redmod_start <= 1'b0;
+            mulmod_start <= 1'b0;
+
+            // ---- CTRL command register (each write is a one-shot command) ----
             if (wen && addr == ADDR_CTRL) begin
                 if (wdata[CTRL_RESET]) begin
-                    // RESET: clear everything
-                    state         <= S_IDLE;
-                    cycle_count   <= 3'd0;
-                    operand       <= 32'd0;
-                    modulus       <= 32'd0;
-                    result        <= 32'd0;
-                    flag_busy     <= 1'b0;
-                    flag_done     <= 1'b0;
-                    flag_error    <= 1'b0;
-                    load_op_armed <= 1'b0;
+                    cstate         <= C_IDLE;
+                    operand        <= 32'd0;
+                    modulus        <= 32'd0;
+                    result         <= 32'd0;
+                    a_reduced      <= 32'd0;
+                    flag_busy      <= 1'b0;
+                    flag_done      <= 1'b0;
+                    flag_error     <= 1'b0;
+                    load_op_armed  <= 1'b0;
                     load_mod_armed <= 1'b0;
-                end else if (wdata[CTRL_START] && state == S_IDLE) begin
-                    // START: begin computation (only from IDLE)
+                end else if (wdata[CTRL_START] && cstate == C_IDLE) begin
                     if (modulus == 32'd0) begin
-                        // Division by zero — error immediately
+                        // division by zero — error immediately
                         flag_error <= 1'b1;
                         flag_done  <= 1'b1;
                         flag_busy  <= 1'b0;
-                        state      <= S_DONE;
                     end else begin
-                        flag_busy  <= 1'b1;
-                        flag_done  <= 1'b0;
-                        flag_error <= 1'b0;
-                        state      <= S_COMPUTING;
-                        cycle_count <= 3'd0;
+                        // kick off reduce -> multiply pipeline
+                        flag_busy    <= 1'b1;
+                        flag_done    <= 1'b0;
+                        flag_error   <= 1'b0;
+                        redmod_start <= 1'b1;
+                        cstate       <= C_REDUCE;
                     end
                     load_op_armed  <= 1'b0;
                     load_mod_armed <= 1'b0;
@@ -114,7 +155,7 @@ module blindsig_accel (
                 end
             end
 
-            // Handle data register writes (gated by armed flags)
+            // ---- data register writes (gated by armed flags) ----
             if (wen && addr == ADDR_OPERAND && load_op_armed) begin
                 operand       <= wdata;
                 load_op_armed <= 1'b0;
@@ -124,21 +165,24 @@ module blindsig_accel (
                 load_mod_armed <= 1'b0;
             end
 
-            // State machine
-            case (state)
-                S_COMPUTING: begin
-                    if (cycle_count == 3'd3) begin
-                        // Computation complete
-                        result    <= square % {32'b0, modulus};
-                        flag_busy <= 1'b0;
-                        flag_done <= 1'b1;
-                        state     <= S_DONE;
-                    end else begin
-                        cycle_count <= cycle_count + 3'd1;
+            // ---- reduce -> multiply pipeline ----
+            case (cstate)
+                C_REDUCE: begin
+                    if (redmod_done) begin
+                        a_reduced    <= redmod_out;
+                        mulmod_start <= 1'b1;
+                        cstate       <= C_MUL;
                     end
                 end
-                // S_IDLE, S_DONE: wait for CTRL commands
-                default: ;
+                C_MUL: begin
+                    if (mulmod_done) begin
+                        result    <= mulmod_out;
+                        flag_busy <= 1'b0;
+                        flag_done <= 1'b1;
+                        cstate    <= C_DONE;
+                    end
+                end
+                default: ; // C_IDLE, C_DONE: wait for CTRL commands
             endcase
         end
     end
