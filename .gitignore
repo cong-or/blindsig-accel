@@ -1,0 +1,25 @@
+# Rust build output
+target/
+**/target/
+
+# Verilog / iverilog simulation artifacts
+*.vcd
+*.vvp
+*.gtkw
+blindsig_tb
+soc.vvp
+sim.log
+
+# RISC-V firmware build artifacts
+*.elf
+*.bin
+*.hex
+*.o
+
+# IDE / editor
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store

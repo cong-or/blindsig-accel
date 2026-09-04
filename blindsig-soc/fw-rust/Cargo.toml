@@ -1,0 +1,12 @@
+[package]
+name = "blindsig-soc-fw"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+blindsig-fw = { path = "../../blindsig-fw" }
+
+[profile.release]
+opt-level = "s"
+lto = true
+panic = "abort"
