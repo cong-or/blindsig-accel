@@ -6,9 +6,15 @@ ACCEL_TB  = tb/tb_blindsig.v
 MUL_SRC   = rtl/mulmod.v
 MUL_TB    = tb/tb_mulmod.v
 
-.PHONY: all sim mulmod waves clean
+.PHONY: all sim mulmod formal waves clean
 
 all: mulmod sim
+
+# Formal verification of the modular multiplier (needs SymbiYosys / OSS CAD Suite):
+#   invariant — unbounded k-induction proof that acc < m at full 32-bit width
+#   equiv     — exhaustive BMC proof that result == (a*b) mod m at reduced width
+formal:
+	sby -f formal/mulmod.sby
 
 # End-to-end accelerator: operand^2 mod modulus via redmod + mulmod
 sim: $(ACCEL_SRC) $(ACCEL_TB)
@@ -25,3 +31,4 @@ waves: blindsig.vcd
 
 clean:
 	rm -f blindsig_tb mulmod_tb blindsig.vcd mulmod.vcd
+	rm -rf formal/mulmod_invariant formal/mulmod_equiv

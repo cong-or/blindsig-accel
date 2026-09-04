@@ -16,7 +16,9 @@ cryptographic work can be built on a de-risked foundation.
 **What works today (and is tested in simulation):**
 
 - A **constant-time modular multiplier** in Verilog (`(a·b) mod m`, bit-serial, fixed
-  cycle count independent of the operands) plus a matching modular reducer.
+  cycle count independent of the operands) plus a matching modular reducer —
+  **formally verified** with SymbiYosys (unbounded k-induction proof of the reduction
+  invariant at 32-bit; exhaustive equivalence proof at reduced width).
 - A memory-mapped accelerator peripheral wrapping those datapaths, computing
   `operand² mod modulus` — no behavioural `*`/`%`, so it is constant-time end to end.
 - A PicoRV32 RISC-V SoC that integrates the accelerator on a memory-mapped bus.

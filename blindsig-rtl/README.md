@@ -23,6 +23,20 @@ no early exit, no data-dependent branching in the datapath. `tb/tb_mulmod.v`
 checks this directly — it asserts every multiplication, from `0` to `(m-1)²`,
 takes the *same* number of cycles.
 
+## Formal verification
+
+`mulmod.v` carries a SymbiYosys harness (`formal/mulmod.sby`, run with `make formal`),
+with two proofs:
+
+- **`invariant`** — an *unbounded* proof by k-induction, at the full 32-bit width, that
+  the accumulator stays reduced (`acc < m`) throughout the computation. This is the
+  modular-arithmetic invariant that underwrites correctness.
+- **`equiv`** — an exhaustive BMC proof, at a reduced width, that `result == (a·b) mod m`
+  against an independent reference over the entire input space.
+
+Both currently pass. The harness lives behind `` `ifdef FORMAL `` and is inert for
+synthesis and simulation.
+
 ## Register interface
 
 Base `0x2000_0000` — CTRL `0x00` (START/RESET/LOAD_OP/LOAD_MOD), STATUS `0x04`

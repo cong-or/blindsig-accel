@@ -1,0 +1,32 @@
+# SymbiYosys formal verification of the constant-time modular multiplier.
+#
+#   invariant : proves the reduction invariant (acc < m throughout the run) at
+#               the full 32-bit width, UNBOUNDED, by k-induction.
+#   equiv     : proves end-to-end correctness (result == (a*b) mod m, reduced)
+#               exhaustively at a reduced width, where the solver can search the
+#               entire input space.
+#
+# Run from the blindsig-rtl directory:  sby -f formal/mulmod.sby   (or `make formal`)
+
+[tasks]
+invariant
+equiv
+
+[options]
+invariant: mode prove
+invariant: depth 6
+equiv: mode bmc
+equiv: depth 12
+
+[engines]
+smtbmc boolector
+
+[script]
+invariant: read_verilog -formal -DFORMAL formal_mulmod.v
+invariant: chparam -set WIDTH 32 mulmod
+equiv: read_verilog -formal -DFORMAL -DFORMAL_EQUIV formal_mulmod.v
+equiv: chparam -set WIDTH 5 mulmod
+prep -top mulmod
+
+[files]
+formal_mulmod.v rtl/mulmod.v

@@ -102,4 +102,63 @@ module mulmod #(
             endcase
         end
     end
+
+`ifdef FORMAL
+    // ---- formal verification harness (inert for synthesis and simulation) ----
+    // Proven with SymbiYosys — see formal/mulmod.sby, run via `make formal`.
+
+    reg f_past_valid = 1'b0;
+    always @(posedge clk) f_past_valid <= 1'b1;
+
+    // Begin every trace with a reset cycle, then hold reset deasserted, so the
+    // proof starts from the known reset state rather than an arbitrary one.
+    always @(*) begin
+        if (!f_past_valid) assume (!rst_n);
+        else               assume (rst_n);
+    end
+
+    // Shadow the operands of the in-flight operation: b_reg shifts during the
+    // run, so capture the originals when the operation starts.
+    reg [WIDTH-1:0] f_a, f_b, f_m;
+    reg             f_running;
+
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            f_running <= 1'b0;
+        end else if (state == S_IDLE && start) begin
+            // preconditions of the operation about to run
+            assume (m > 0);
+            assume (a < m);
+            f_a       <= a;
+            f_b       <= b;
+            f_m       <= m;
+            f_running <= 1'b1;
+        end else if (done) begin
+            f_running <= 1'b0;
+        end
+    end
+
+    // Reduction invariant: throughout the run the accumulator stays in range.
+    // Proven unbounded by k-induction (the two operand facts are the auxiliary
+    // invariants that make `acc < m` inductive).
+    always @(posedge clk)
+        if (f_past_valid && rst_n && state == S_RUN) begin
+            assert (m_reg != 0);
+            assert (a_reg <  m_reg);
+            assert (acc   < {1'b0, m_reg});
+        end
+
+`ifdef FORMAL_EQUIV
+    // End-to-end correctness, checked by BMC at a reduced WIDTH where the input
+    // space is exhaustively searchable: the result is reduced and equals
+    // (a*b) mod m computed by an independent reference.
+    always @(posedge clk)
+        if (f_past_valid && rst_n && done && f_running) begin
+            assert (result < f_m);
+            assert ( {{WIDTH{1'b0}}, result} ==
+                     (({{WIDTH{1'b0}}, f_a} * {{WIDTH{1'b0}}, f_b}) % {{WIDTH{1'b0}}, f_m}) );
+        end
+`endif
+`endif
+
 endmodule
