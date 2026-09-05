@@ -5,7 +5,12 @@ firmware that drives it. This repository is the **integration proof-of-concept**
 larger project: an open hardware accelerator for blind signature operations (blind RSA
 and blind Schnorr) targeting RISC-V soft cores on FPGA.
 
-Project site: <https://blindsig-hardware.org>
+Project site: <https://blindsig-hardware.org> · **Live demo (real RTL in your browser):** <https://cong-or.github.io/blindsig-accel/>
+
+![Composable open hardware — your project contains the SoC, which contains the accelerator, which contains the reusable modular-multiplier core](doc/composability.png)
+
+Each layer is independently reusable: the `mulmod` core drops into any modular-arithmetic
+design, the accelerator into any RISC-V SoC, the SoC into your product.
 
 ## Status — read this first
 

@@ -3,6 +3,10 @@
 The blind signature accelerator peripheral in Verilog, built from constant-time
 modular-arithmetic datapaths, with testbenches.
 
+![mulmod datapath — a constant-time bit-serial modular multiplier: double, conditional-subtract reduce, add, reduce, select-on-b-bit, looping into the accumulator](../doc/datapath.png)
+
+Try it live (the real RTL, compiled to WASM): <https://cong-or.github.io/blindsig-accel/>
+
 The accelerator computes `operand² mod modulus` (a modular squaring — the inner step of
 square-and-multiply modular exponentiation) over a memory-mapped register interface. The
 arithmetic is done by two bit-serial datapaths — **not** by Verilog's behavioural `*`/`%`

@@ -1,0 +1,42 @@
+digraph composability {
+  rankdir=LR;
+  bgcolor="white";
+  fontname="Helvetica"; fontsize=19; labelloc="t";
+  label="Off-the-shelf, composable open hardware — each layer is independently reusable";
+  node  [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded"];
+  edge  [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  subgraph cluster_project {
+    style="rounded,filled"; color="#f6eeff"; penwidth=1;
+    label="  YOUR PROJECT   ·   offline ecash wallet · privacy device · secure element  ";
+    fontcolor="#6a3db0"; fontsize=13;
+
+    subgraph cluster_soc {
+      style="rounded,filled"; color="#e9f1ff"; penwidth=1;
+      label="  blindsig-soc   ·   drops into any RISC-V SoC — bus adapter only   ·   CERN-OHL-P  ";
+      fontcolor="#2a4d8f"; fontsize=12;
+
+      cpu [label="RISC-V CPU\nPicoRV32 · VexRiscv · Ibex · SERV", fillcolor="#ffffff", color="#2a4d8f"];
+      bus [label="bus adapter\nvalid/ready → wen/ren", fillcolor="#ffffff", color="#2a4d8f"];
+
+      subgraph cluster_accel {
+        style="rounded,filled"; color="#e6fbec"; penwidth=1;
+        label="  blindsig_accel   ·   drop-in MMIO peripheral   ·   5-register interface\l  reuse as a public-key coprocessor on any RISC-V SoC  ";
+        fontcolor="#1f7a1f"; fontsize=11;
+
+        redmod [label="redmod\nx mod m\n(bring operand in range)", fillcolor="#ffffff", color="#1f7a1f"];
+
+        subgraph cluster_core {
+          style="rounded,filled"; color="#fff7d6"; penwidth=2;
+          label="  mulmod — the reusable core\l  reuse anywhere: RSA · DH · ECC · ZK · FHE  ";
+          fontcolor="#9c7500"; fontsize=11;
+          mulmod [label="constant-time\nmodular multiplier\n(a·b) mod m\n\n★ formally verified", fillcolor="#ffffff", color="#b58900", penwidth=2];
+        }
+      }
+    }
+  }
+
+  cpu -> bus;
+  bus -> redmod;
+  redmod -> mulmod [label="a = operand mod m"];
+}

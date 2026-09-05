@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mulmod — open, constant-time modular multiplier for RISC-V</title>
+<meta name="description" content="An open-hardware, formally verified, constant-time modular multiplier for RISC-V. Try the real circuit live in your browser and drop it into your design.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='7' fill='%2337d6cf'/></svg>">
+</head>
+<body>
+
+<nav><div class="wrap">
+  <span class="brand"><b>blindsig</b> · mulmod</span>
+  <span class="tag">OPEN HARDWARE · RISC-V</span>
+  <span class="spacer"></span>
+  <a href="#play">Live demo</a>
+  <a href="#compose">Compose</a>
+  <a href="#use">Use it</a>
+  <a href="https://github.com/cong-or/blindsig-accel">GitHub ↗</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Composable open-hardware building block</div>
+  <h1>A constant-time modular multiplier<br>you can <span class="accent">drop into your RISC-V design.</span></h1>
+  <p class="lede">Modular multiplication is the workhorse of public-key cryptography. This is an open,
+    formally verified hardware core that computes it in <b>fixed time</b> — so it can't leak secrets by
+    how long it takes. Try the real circuit below, then take it off the shelf.</p>
+  <div class="cta">
+    <a class="btn primary" href="#play">▶ Try the real circuit</a>
+    <a class="btn" href="https://github.com/cong-or/blindsig-accel">View source · CERN-OHL-P</a>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="kicker">What it is</div>
+  <h2>One small part, useful everywhere</h2>
+  <p class="sub">Plain and honest: a bit-serial datapath that computes <span class="mono">(a·b) mod m</span>, in
+    hardware, with no data-dependent branches. Small enough to understand, general enough to reuse.</p>
+  <div class="grid3">
+    <div class="card"><div class="ic">01 · WHAT</div><h3>Modular multiply</h3>
+      <p>Multiplies two numbers and wraps them around a modulus — the inner loop of RSA, Diffie–Hellman, elliptic curves, and zero-knowledge proofs.</p></div>
+    <div class="card"><div class="ic">02 · WHY FIXED-TIME</div><h3>No timing leak</h3>
+      <p>Every multiply takes the <b>same</b> number of cycles regardless of the operands. The reduce/add choices are multiplexers, not branches — constant-time by construction.</p></div>
+    <div class="card"><div class="ic">03 · WHY HARDWARE</div><h3>Guaranteed, not hoped</h3>
+      <p>On a general CPU the compiler can silently break constant-time. A fixed-function datapath removes that whole class of side channel — by design.</p></div>
+  </div>
+</div></section>
+
+<section id="play"><div class="wrap">
+  <div class="kicker">Live · the real RTL in your browser</div>
+  <h2>Watch the actual circuit compute</h2>
+  <p class="sub">This is <span class="mono">mulmod.v</span> compiled by Verilator to WebAssembly — the same
+    synthesized hardware the testbench runs, cycle-for-cycle. Enter operands and run it. Try any inputs:
+    it always lands on 33 cycles.</p>
+
+  <div class="instrument">
+    <div class="svgwrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" font-family="'Space Grotesk','Helvetica Neue',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1122"/><stop offset="1" stop-color="#080d18"/></linearGradient>
+    <linearGradient id="accgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f1c2e"/><stop offset="1" stop-color="#0b1524"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#12203a" stroke-width="1"/></pattern>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="glowA" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L8 4.5L0 9Z" fill="#46618f"/></marker>
+    <style>
+      .stage{fill:#0e1a2c;stroke:#31507d;stroke-width:1.3}
+      .name{fill:#eaf1fb;font-size:15px;font-weight:600}
+      .kick{fill:#8ba3c7;font-size:10.5px;font-family:'Space Mono',monospace;letter-spacing:1.5px}
+      .val{fill:#37d6cf;font-size:15px;font-family:'Space Mono',monospace;font-weight:700}
+      .mux{fill:#8ba3c7;font-size:10px;font-family:'Space Mono',monospace}
+    </style>
+  </defs>
+  <rect width="1280" height="560" fill="url(#bg)"/>
+  <rect width="1280" height="560" fill="url(#grid)" opacity="0.6"/>
+  <text x="48" y="62" class="name" font-size="34" letter-spacing="1">mulmod</text>
+  <text x="49" y="86" class="kick" fill="#37d6cf">CONSTANT-TIME MODULAR MULTIPLIER</text>
+  <text x="300" y="60" class="val" font-size="19" opacity="0.9">result = (a · b) mod m</text>
+  <line x1="48" y1="104" x2="1232" y2="104" stroke="#1e3152" stroke-width="1"/>
+  <text x="1232" y="56" text-anchor="end" class="kick">CYCLE</text>
+  <text id="cyc" x="1232" y="88" text-anchor="end" class="val" font-size="26">00 / 33</text>
+
+  <rect x="48" y="176" width="168" height="56" rx="11" fill="url(#accgrad)" stroke="#31507d" stroke-width="1.3"/>
+  <text x="64" y="200" class="name" font-size="14">a_reg</text><text x="64" y="219" class="mux">multiplicand · &lt; m</text>
+  <rect x="48" y="256" width="168" height="56" rx="11" fill="url(#accgrad)" stroke="#31507d" stroke-width="1.3"/>
+  <text x="64" y="280" class="name" font-size="14">b_reg</text><text x="64" y="299" class="mux">shift ◄ · MSB = active bit</text>
+  <rect x="48" y="336" width="168" height="56" rx="11" fill="url(#accgrad)" stroke="#31507d" stroke-width="1.3"/>
+  <text x="64" y="360" class="name" font-size="14">m_reg</text><text x="64" y="379" class="mux">modulus</text>
+
+  <text x="264" y="150" class="kick">ONE CONSTANT-TIME STEP · IDENTICAL WORK EVERY CYCLE · MUXES, NOT BRANCHES</text>
+  <g id="s_dbl"><rect x="264" y="206" width="120" height="60" rx="10" class="stage"/><text x="324" y="234" text-anchor="middle" class="name">×2</text><text x="324" y="253" text-anchor="middle" class="mux">acc « 1</text></g>
+  <g id="s_red1"><rect x="408" y="206" width="136" height="60" rx="10" class="stage"/><text x="476" y="231" text-anchor="middle" class="name" font-size="14">reduce ⊖</text><text x="476" y="251" text-anchor="middle" class="mux">≥ m ? − m : keep</text></g>
+  <g id="s_add"><rect x="568" y="206" width="120" height="60" rx="10" class="stage"/><text x="628" y="234" text-anchor="middle" class="name">+ a</text><text x="628" y="253" text-anchor="middle" class="mux">if b-bit</text></g>
+  <g id="s_red2"><rect x="712" y="206" width="136" height="60" rx="10" class="stage"/><text x="780" y="231" text-anchor="middle" class="name" font-size="14">reduce ⊖</text><text x="780" y="251" text-anchor="middle" class="mux">≥ m ? − m : keep</text></g>
+  <g id="s_mux"><rect x="872" y="206" width="126" height="60" rx="10" fill="#1a1608" stroke="#c8912f" stroke-width="1.4"/><text x="935" y="231" text-anchor="middle" class="name" font-size="14" fill="#ffce7a">select</text><text x="935" y="251" text-anchor="middle" class="mux" fill="#d8b072">b-bit ? red2 : red1</text></g>
+
+  <g id="s_acc"><rect x="1052" y="192" width="180" height="86" rx="12" fill="url(#accgrad)" stroke="#37d6cf" stroke-width="1.6" filter="url(#glow)"/><text x="1068" y="218" class="name" font-size="14">acc</text><text x="1068" y="236" class="mux">always &lt; m</text><text id="accv" x="1216" y="258" text-anchor="end" class="val" font-size="24">0</text></g>
+  <rect x="1052" y="360" width="180" height="68" rx="12" fill="#0c1f18" stroke="#2f9e6f" stroke-width="1.4"/>
+  <text x="1068" y="386" class="name" font-size="14" fill="#8ff0c4">result</text><text x="1068" y="404" class="mux" fill="#6fb99a">(a·b) mod m</text>
+  <text id="resv" x="1216" y="420" text-anchor="end" class="val" font-size="22" fill="#8ff0c4">—</text>
+
+  <rect x="264" y="436" width="322" height="40" rx="20" fill="#0c1930" stroke="#37d6cf" stroke-width="1.2"/>
+  <circle cx="290" cy="456" r="5" fill="#37d6cf" filter="url(#glowA)"/><text x="308" y="461" class="kick" fill="#bfe9e6">33 CYCLES · ANY OPERANDS · NO BRANCHES</text>
+  <rect x="606" y="436" width="250" height="40" rx="20" fill="#0c1930" stroke="#c8912f" stroke-width="1.1"/>
+  <text x="628" y="461" class="kick" fill="#e2c48d">★ FORMALLY VERIFIED · SYMBIYOSYS</text>
+
+  <g fill="none" stroke="#3c5680" stroke-width="1.6" marker-end="url(#arr)">
+    <path d="M384 236 H408"/><path d="M544 236 H568"/><path d="M688 236 H712"/><path d="M848 236 H872"/><path d="M998 236 H1052"/>
+    <path d="M216 204 H240 V236 H264"/>
+    <path d="M216 284 C 700 284, 780 284, 935 276"/>
+    <path d="M216 364 C 300 364, 460 280, 476 266"/>
+  </g>
+  <path d="M216 364 C 420 440, 720 440, 780 266" fill="none" stroke="#3c5680" stroke-width="1.3" stroke-dasharray="4 4"/>
+  <path d="M1142 278 V318 C 1142 350, 324 350, 324 284 V266" fill="none" stroke="#37d6cf" stroke-width="1.5" stroke-opacity="0.55" marker-end="url(#arr)"/>
+  <text x="700" y="344" text-anchor="middle" class="mux" fill="#4fb6b0">acc ← step   (loop WIDTH times)</text>
+  <path d="M1142 278 V360" fill="none" stroke="#2f9e6f" stroke-width="1.5" marker-end="url(#arr)"/>
+</svg>
+    </div>
+
+    <div class="controls">
+      <div class="field"><label>a — multiplicand</label><input id="in_a" class="mono" value="123456789"></div>
+      <div class="field"><label>b — multiplier</label><input id="in_b" class="mono" value="987654321"></div>
+      <div class="field"><label>m — modulus</label><input id="in_m" class="mono" value="4294967291"></div>
+      <div class="runbar">
+        <button id="btn_step" class="btn">Step</button>
+        <button id="btn_run" class="btn primary">▶ Run</button>
+      </div>
+    </div>
+    <div id="status" class="status">loading the real <span class="mono">mulmod.v</span> …</div>
+    <div id="ctlog" class="ct-log"></div>
+  </div>
+</div></section>
+
+<section id="verify"><div class="wrap">
+  <div class="kicker">Assurance · aerospace-grade</div>
+  <h2>Simulated <span class="muted">and</span> proven</h2>
+  <p class="sub">Testing shows it works for the cases you run. <b>Formal verification proves it for every possible
+    input.</b> This core has both — and both are open-source, so you can re-run them yourself.</p>
+  <div class="verify">
+    <div class="vpanel">
+      <div class="h"><span class="dot" style="color:#37d6cf"></span><b>Simulate</b> — Verilator (cycle-accurate)</div>
+      <pre>$ make            # Icarus + Verilator
+mulmod   : 12/12 vectors · <span class="pass">constant 33-cycle latency</span>
+accel    : 4/4 vectors · reduce → multiply pipeline
+soc      : PicoRV32 → accel → result = 2  <span class="pass">PASS</span>
+
+the WASM demo above <span class="muted">is</span> this model, in your browser.</pre>
+    </div>
+    <div class="vpanel">
+      <div class="h"><span class="dot" style="color:#ffce7a"></span><b>Prove</b> — SymbiYosys (formal)</div>
+      <pre>$ make formal
+[invariant] k-induction · full 32-bit · unbounded
+            acc &lt; m holds for all inputs      <span class="pass">PASS</span>
+[equiv]     BMC · exhaustive input space
+            result == (a·b) mod m             <span class="pass">PASS</span>
+DONE (<span class="pass">PASS</span>) — machine-checked, not sampled.</pre>
+    </div>
+  </div>
+</div></section>
+
+<section id="compose"><div class="wrap">
+  <div class="kicker">Compose · the interface is the contract</div>
+  <h2>Wire it in — nothing bespoke</h2>
+  <p class="sub">Two ways to use it: instantiate the core directly in your RTL, or drive the packaged
+    accelerator over a 5-register MMIO interface from firmware. Same design, your choice of altitude.</p>
+
+  <div class="codewrap">
+    <button class="copy" onclick="copyCode('inst',this)">copy</button>
+    <pre class="code" id="inst">// Drop the reusable core straight into your datapath
+mulmod #(.WIDTH(32)) u_mul (
+    .clk(clk), .rst_n(rst_n),
+    .start(start),           // 1-cycle pulse
+    .a(a), .b(b), .m(m),     // a &lt; m, m &gt; 0
+    .result(result),         // (a·b) mod m, valid on `done`
+    .done(done), .busy(busy) // fixed-latency handshake
+);</pre>
+  </div>
+
+  <table class="reg">
+    <tr><th>Offset</th><th>Register</th><th>Meaning</th></tr>
+    <tr><td class="mono">0x00</td><td>CTRL</td><td>START · RESET · LOAD_OP · LOAD_MOD</td></tr>
+    <tr><td class="mono">0x04</td><td>STATUS</td><td>BUSY · DONE · ERROR</td></tr>
+    <tr><td class="mono">0x08</td><td>OPERAND</td><td>operand in</td></tr>
+    <tr><td class="mono">0x0C</td><td>RESULT</td><td>result out</td></tr>
+    <tr><td class="mono">0x10</td><td>MODULUS</td><td>modulus in</td></tr>
+  </table>
+
+  <div class="codewrap" style="margin-top:20px">
+    <button class="copy" onclick="copyCode('drv',this)">copy</button>
+    <pre class="code" id="drv">// Bare-metal Rust (no_std) — the packaged peripheral
+let accel = BlindSigAccel::new(0x2000_0000);
+let result = accel.compute(&amp;[modulus], &amp;[operand])?;   // reset → load → start → poll → read</pre>
+  </div>
+</div></section>
+
+<section id="use"><div class="wrap">
+  <div class="kicker">Use it</div>
+  <h2>Off the shelf, open, reproducible</h2>
+  <p class="sub">Open toolchain end to end — no proprietary tools at any step. Clone it, build it, prove it.</p>
+  <div class="codewrap">
+    <button class="copy" onclick="copyCode('clone',this)">copy</button>
+    <pre class="code" id="clone">git clone https://github.com/cong-or/blindsig-accel
+cd blindsig-accel/blindsig-rtl
+make          # simulate: unit test + accelerator (Icarus Verilog)
+make formal   # prove:    k-induction + equivalence (SymbiYosys)</pre>
+  </div>
+  <div class="grid3" style="margin-top:22px">
+    <div class="card"><div class="ic">HARDWARE</div><h3>CERN-OHL-P-2.0</h3><p>Permissive open hardware — use it in commercial designs.</p></div>
+    <div class="card"><div class="ic">SOFTWARE</div><h3>MIT / Apache-2.0</h3><p>The Rust driver and tooling, your choice of license.</p></div>
+    <div class="card"><div class="ic">TOOLCHAIN</div><h3>100% open</h3><p>Yosys · nextpnr · Verilator · SymbiYosys · Icarus. <span class="mono">apt install</span> and go.</p></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span class="brand"><b>blindsig</b></span>
+  <span class="mono" style="font-size:12px">open hardware blind-signature accelerator · NLnet</span>
+  <span class="spacer"></span>
+  <a href="https://github.com/cong-or/blindsig-accel">GitHub</a>
+  <a href="https://blindsig-hardware.org">blindsig-hardware.org</a>
+</div></footer>
+
+<script src="wasm/mulmod.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
