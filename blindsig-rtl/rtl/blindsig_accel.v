@@ -14,9 +14,12 @@
 //   1. redmod  reduces the operand into range:  a = operand mod modulus
 //   2. mulmod  squares it modulo the modulus:   result = (a * a) mod modulus
 // Both run in a fixed number of cycles independent of the operand values, so
-// the peripheral is constant-time end to end. This single-word core is the
-// seed of the full-width Montgomery multiplier and modexp pipeline; the
-// register interface and the redmod/mulmod primitives generalise directly.
+// the peripheral is constant-time end to end. The operation is a modular
+// squaring — the inner step of square-and-multiply modular exponentiation.
+// mulmod reduces by conditional subtraction; the funded full-width core keeps
+// this constant-time, formally-verified structure but replaces the reduction
+// with Montgomery reduction and chains it into a modexp pipeline. The register
+// interface and the redmod/mulmod primitives generalise directly.
 
 module blindsig_accel (
     input  wire        clk,

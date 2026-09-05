@@ -86,6 +86,7 @@ module soc_top (
     // Sim I/O
     // ---------------------------------------------------------------
     reg simio_halt;
+    reg simio_ready_r;   // sim I/O ready: one-cycle pulse (driven below, used above)
 
     initial simio_halt = 1'b0;
 
@@ -129,8 +130,7 @@ module soc_top (
             ram_ready_r <= mem_valid && sel_ram && !ram_ready_r;
     end
 
-    // Sim I/O ready: one-cycle pulse
-    reg simio_ready_r;
+    // Sim I/O ready: one-cycle pulse (simio_ready_r declared in the Sim I/O section above)
     always @(posedge clk) begin
         if (!resetn)
             simio_ready_r <= 1'b0;

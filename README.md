@@ -25,13 +25,20 @@ cryptographic work can be built on a de-risked foundation.
 - C firmware and a bare-metal Rust (`no_std`) driver that drive the accelerator and read
   results back — the full `CPU → bus → accelerator → result` path runs end-to-end.
 
-**What is single-word today, and is the funded scope ahead:** the arithmetic is real and
-constant-time but operates on a single 32-bit word (test vector `10² mod 7 = 2`). The
-work ahead scales it to full RSA-2048/3072 widths in Montgomery form, chains it into a
-modular-exponentiation pipeline, adds blind Schnorr, formally verifies the arithmetic
-invariants with SymbiYosys, and synthesises to the Lattice ECP5 via the open
-Yosys/nextpnr/Trellis toolchain. The register interface and the `mulmod`/`redmod`
-primitives generalise directly to that work.
+**What is single-word today, and what the funded scope adds:** the arithmetic is real and
+constant-time but operates on a single 32-bit word. The operation is a modular squaring
+(`operand² mod modulus`, test vector `10² mod 7 = 2`) — the inner step of the
+square-and-multiply modular exponentiation the full design is built around. The multiplier
+reduces by conditional subtraction; the funded work keeps this constant-time,
+formally-verified, bit-serial structure but replaces the reduction with **Montgomery
+reduction**, scales it to full RSA-2048/3072 widths, chains it into a modular-exponentiation
+pipeline, adds blind Schnorr, and synthesises to the Lattice ECP5 via the open
+Yosys/nextpnr/Trellis toolchain. The funded work also cross-checks the RTL against the
+`blind-rsa` software reference under **Verilator** co-simulation; the prototype's
+testbenches run under Icarus Verilog against an in-bench reference oracle, and the
+multiplier is additionally proven equivalent to `(a·b) mod m` by SymbiYosys. The register
+interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC integration
+all carry over directly.
 
 The current core also runs on **PicoRV32**; the proposed target core is **VexRiscv**.
 The MMIO integration pattern is identical, so the port is a bus-adapter change.

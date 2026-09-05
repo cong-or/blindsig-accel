@@ -3,12 +3,14 @@
 The blind signature accelerator peripheral in Verilog, built from constant-time
 modular-arithmetic datapaths, with testbenches.
 
-The accelerator computes `operand² mod modulus` over a memory-mapped register
-interface. The arithmetic is done by two bit-serial datapaths — **not** by
-Verilog's behavioural `*`/`%` operators — so the peripheral is constant-time end
-to end. This is single-word (32-bit) today; it is the seed of the full-width
-Montgomery multiplier and modular-exponentiation pipeline that are the work ahead
-(see the [top-level README](../README.md)).
+The accelerator computes `operand² mod modulus` (a modular squaring — the inner step of
+square-and-multiply modular exponentiation) over a memory-mapped register interface. The
+arithmetic is done by two bit-serial datapaths — **not** by Verilog's behavioural `*`/`%`
+operators — so the peripheral is constant-time end to end. This is single-word (32-bit)
+today and reduces by conditional subtraction; the funded work keeps this constant-time,
+formally-verified structure but swaps in **Montgomery reduction**, scales to full
+RSA-2048/3072 widths, and chains it into a modular-exponentiation pipeline (see the
+[top-level README](../README.md)).
 
 ## Modules
 
