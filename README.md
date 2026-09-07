@@ -38,24 +38,6 @@ builds is in the [roadmap](#roadmap).
 The register interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC
 integration all carry over directly — the funded work builds on this foundation.
 
-## Why this matters
-
-Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a
-closed toolchain — you take the security on faith. The lasting output of this project is not
-one accelerator but a **reproducible pipeline for trustworthy crypto hardware**:
-constant-time-by-construction RTL, formally verified with an open prover, cross-checked
-against a software reference, synthesised end-to-end with a fully open flow, and re-verified
-in CI — so the security properties travel with the code as machine-checked proofs anyone can
-re-run. Blind signatures are the first primitive built this way; the same pipeline
-generalises to the modular-arithmetic, elliptic-curve, and post-quantum primitives the
-ecosystem needs next. And because the whole path from source to bitstream is open and
-reproducible, the components are auditable — the openness that enables the verification is
-also the supply-chain-integrity story, with no proprietary black box between design and gate.
-
-And as generation — of code, of RTL, even of proofs — automates, the scarce part is the *claim* a
-human can still read and re-check: a machine can search for a proof, but only a person can be
-accountable for what it proves. (What's proven here, and how to re-check it, is spelled out below.)
-
 ## Roadmap
 
 The funded work is organised as five milestones (from the grant proposal). The prototype in
@@ -157,6 +139,24 @@ checker, you can ignore everything else and still know the claims hold.
 **How to re-check:** `cd blindsig-rtl && make formal` re-runs the k-induction and BMC proofs from a
 clean clone with open tools; `make` re-runs the constant-latency simulation. Nothing here depends on
 who — or what — wrote the code.
+
+## Why this matters
+
+Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a
+closed toolchain — you take the security on faith. The lasting output of this project is not
+one accelerator but a **reproducible pipeline for trustworthy crypto hardware**:
+constant-time-by-construction RTL, formally verified with an open prover, cross-checked
+against a software reference, synthesised end-to-end with a fully open flow, and re-verified
+in CI — so the security properties travel with the code as machine-checked proofs anyone can
+re-run. Blind signatures are the first primitive built this way; the same pipeline
+generalises to the modular-arithmetic, elliptic-curve, and post-quantum primitives the
+ecosystem needs next. And because the whole path from source to bitstream is open and
+reproducible, the components are auditable — the openness that enables the verification is
+also the supply-chain-integrity story, with no proprietary black box between design and gate.
+
+And as generation — of code, of RTL, even of proofs — automates, the scarce part is the *claim* a
+human can still read and re-check: a machine can search for a proof, but only a person can be
+accountable for what it proves — the properties above are stated plainly for exactly that reason.
 
 ## Licensing
 
