@@ -47,7 +47,7 @@ The proofs are re-runnable objects, not claims:
   independent reference.
 - **In range** — the accumulator stays below `m` at every step, by unbounded k-induction at full
   32-bit width.
-- **Constant-time** — every multiplication takes the same number of cycles regardless of the operands.
+- **Constant-time** — every multiplication takes the same number of cycles regardless of the operands, so it cannot leak secrets through timing.
 
 You have to trust only the open checker (Yosys and its SAT/SMT solver) and the Verilog — not the
 author. Re-check it yourself: `cd blindsig-rtl && make formal`.
@@ -65,12 +65,18 @@ MODULUS); the register map and driver sequence are documented in [`blindsig-rtl/
 
 ## Why it matters
 
-Using a crypto accelerator today usually means trusting closed IP built by a closed toolchain. This
-project is a reproducible pipeline instead: constant-time RTL, formally verified with an open prover,
-cross-checked against a software reference, synthesised with a fully open flow, and re-verified in CI.
-The security properties travel with the code as proofs anyone can re-run. Blind signatures are the
-first primitive built this way; the same method generalises to elliptic-curve, hashing, and
-post-quantum primitives.
+**Side channels are the real threat — and they are designed out here.** On a general-purpose CPU,
+blind-signature crypto leaks secrets through *timing*: the compiler and microarchitecture reintroduce
+data-dependent timing no matter how careful the software is. A fixed-function, constant-time datapath
+removes that whole class of attack by construction, and the funded work extends the same discipline to
+power and EM side channels (leakage assessment and formal masking).
+
+**A catalogue of trustworthy building blocks, not one accelerator.** The lasting output is a
+reproducible pipeline — constant-time RTL, formally verified with an open prover, cross-checked against
+a software reference, synthesised with a fully open flow, re-verified in CI — so a component's security
+travels with it as proofs anyone can re-run. Blind signatures are the first primitive built this way;
+the same method produces the modular-arithmetic, elliptic-curve, hashing, and post-quantum cores the
+ecosystem needs, each permissively licensed and ready to drop into someone else's chip.
 
 ## Licensing
 
