@@ -104,6 +104,12 @@ not re-implemented in JavaScript.</p>
 </svg>
   </div>
 
+  <div class="annun">
+    <div class="ind"><span class="ind-label">State</span><span id="state" class="ind-state stby">STANDBY</span></div>
+    <div class="ind ind-grow"><span class="ind-label">Sequence · 33 cycles</span><div class="prog"><i id="prog"></i></div></div>
+    <div class="ind ind-right"><span class="ind-label">Result</span><span id="res2" class="ind-res">—</span></div>
+  </div>
+
   <div class="controls">
     <div class="field"><label>a — multiplicand</label><input id="in_a" class="mono" value="123456789"></div>
     <div class="field"><label>b — multiplier</label><input id="in_b" class="mono" value="987654321"></div>
@@ -114,7 +120,7 @@ not re-implemented in JavaScript.</p>
     </div>
   </div>
   <div id="status" class="status">loading <span class="mono">mulmod.v</span> …</div>
-  <div id="ctlog" class="ct-log"></div>
+  <div class="ct-log-wrap"><span class="ind-label">Constant-time log</span><div id="ctlog" class="ct-log"></div></div>
 </div>
 
 <p class="note">Any inputs land on the same 33 cycles. Each result is checked against

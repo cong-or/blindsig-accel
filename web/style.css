@@ -74,4 +74,28 @@ pre.code .c{color:var(--dim)}
 footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);color:var(--dim);
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font-size:13px}
 
-@media(max-width:560px){.controls{gap:.75rem}.field input{width:120px}}
+/* ---- cockpit annunciator (Airbus/ECAM cognitive-load discipline) ---- */
+.fault{color:var(--red)}
+.annun{display:flex;align-items:stretch;border-top:1px solid var(--line)}
+.annun .ind{padding:.7rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;justify-content:center;min-width:0}
+.annun .ind + .ind{border-left:1px solid var(--line)}
+.annun .ind-grow{flex:1}
+.annun .ind-right{align-items:flex-end;min-width:120px}
+.ind-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.ind-state{font-family:'Space Mono',monospace;font-size:15px;letter-spacing:.14em;font-weight:700;display:flex;align-items:center;gap:.55rem}
+.ind-state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+.ind-state.stby{color:var(--dim)}
+.ind-state.stby::before{box-shadow:none}
+.ind-state.run{color:var(--teal)}
+.ind-state.done{color:var(--teal-br)}
+.ind-state.fault{color:var(--red)}
+.prog{height:8px;background:var(--panel2);border:1px solid var(--line);border-radius:2px;overflow:hidden;
+  background-image:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/33 - 1px),#141a1e calc(100%/33 - 1px),#141a1e calc(100%/33))}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal-dk),var(--teal));transition:width .07s linear}
+.ind-res{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--teal-br);line-height:1}
+.ind-res.fault{color:var(--red)}
+.status{border-top:1px solid var(--line)}
+.ct-log-wrap{padding:.6rem 1.1rem 1.1rem;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:.5rem}
+.ct-log-wrap .ct-log{padding:0}
+
+@media(max-width:560px){.controls{gap:.75rem}.field input{width:120px}.annun{flex-wrap:wrap}.annun .ind-right{align-items:flex-start}}

@@ -1,13 +1,13 @@
 // app.js — drive the datapath SVG from the REAL mulmod RTL (Verilator → WASM).
 // Nothing here reimplements the algorithm: we only step the compiled circuit's
-// clock and read its registers.
+// clock and read its registers. The panel is an annunciator over that live state.
 
 (function () {
   "use strict";
   const $ = (id) => document.getElementById(id);
   const STEP_MS = 70;
 
-  let sim = null;        // wrapped WASM entry points
+  let sim = null;
   let timer = null;
   let inA = 0, inB = 0, inM = 7;
 
@@ -28,14 +28,17 @@
     box.setAttribute("stroke", "#81e6d9");
     setTimeout(() => box.setAttribute("stroke", "#4fd1c5"), STEP_MS * 0.7);
   }
-  // Highlight the stages the circuit exercises this cycle, from the real b bit:
-  // b-bit set => the add path (`+ a` / red2) is live; clear => just double-and-
-  // reduce. cyc < 2 is the load cycle, before any compute has happened.
+  // dark-cockpit annunciation: dim at rest, the b-bit lights the live path
   function showActive(cyc, bit) {
     if (cyc < 2) setActive([]);
     else if (bit) setActive(["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"]);
     else setActive(["s_dbl", "s_red1", "s_mux"]);
   }
+
+  // ---- panel annunciator (state word + bounded sequence gauge) ----
+  function setState(word, cls) { const e = $("state"); if (e) { e.textContent = word; e.className = "ind-state " + cls; } }
+  function setProg(cyc) { const e = $("prog"); if (e) e.style.width = (Math.min(cyc, 33) / 33 * 100) + "%"; }
+  function setRes(text, fault) { const e = $("res2"); if (e) { e.textContent = text; e.className = fault ? "ind-res fault" : "ind-res"; } }
 
   function u32(x) { return (x >>> 0); }
   function bigMulMod(a, b, m) { return Number((BigInt(u32(a)) * BigInt(u32(b))) % BigInt(u32(m))); }
@@ -46,21 +49,32 @@
     let pm = u32(parseInt($("in_m").value || "0", 10));
     if (pm < 2) pm = 2;
     // mulmod's contract is a < m; reduce a so the demo always matches (a·b) mod m.
-    return { a: pa % pm, b: pb, m: pm, rawa: pa };
+    return { a: pa % pm, b: pb, m: pm };
   }
 
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
+  function arm() {
+    $("resv").textContent = "…";
+    $("cyc").textContent = "00 / 33";
+    setRes("…", false);
+    setProg(0);
+    setState("RUN", "run");
+  }
+
   function finish(a, b, m, cycles) {
     const res = u32(sim.result());
     const exp = bigMulMod(a, b, m);
+    const ok = res === exp;
     $("resv").textContent = String(res);
     setActive([]);
-    const ok = res === exp;
+    setProg(cycles);
+    setState(ok ? "DONE" : "FAULT", ok ? "done" : "fault");
+    setRes(ok ? String(res) : "ERR", !ok);
     $("status").innerHTML = ok
-      ? `done · <b>result ${res}</b> = ${u32(a)}·${u32(b)} mod ${u32(m)} · <span class="mono">${cycles} cycles</span> · verified against (a·b) mod m ✓`
-      : `<span style="color:#ff8f8f">mismatch: got ${res}, expected ${exp}</span>`;
-    // constant-time evidence log
+      ? `VERIFIED · ${u32(a)}·${u32(b)} mod ${u32(m)} = <b>${res}</b> · ${cycles} cycles · matches (a·b) mod m`
+      : `<span class="fault">FAULT · got ${res}, expected ${exp}</span>`;
+    // constant-time evidence
     const log = $("ctlog");
     const chip = document.createElement("span");
     chip.className = "chip";
@@ -76,14 +90,15 @@
     const { a, b, m } = readInputs();
     inA = a; inB = b; inM = m;
     sim.reset(); sim.load(a, b, m);
-    $("resv").textContent = "…";
+    arm();
     setRunning(true);
     timer = setInterval(() => {
-      const bit = sim.bbit();          // real b_reg MSB — the bit this step consumes
+      const bit = sim.bbit();
       const done = sim.step();
       const cyc = sim.cycles();
       $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
       $("accv").textContent = String(u32(sim.acc()));
+      setProg(cyc);
       showActive(cyc, bit);
       pulseAcc();
       if (done) { stop(); finish(a, b, m, cyc); }
@@ -94,13 +109,14 @@
     if (!sim) return;
     if (!timer && (sim.cycles() === 0 || sim.cycles() >= 33)) {
       const { a, b, m } = readInputs(); inA = a; inB = b; inM = m;
-      sim.reset(); sim.load(a, b, m); $("resv").textContent = "…"; setRunning(true, true);
+      sim.reset(); sim.load(a, b, m); arm(); setRunning(true, true);
     }
-    const bit = sim.bbit();          // real b_reg MSB — the bit this step consumes
+    const bit = sim.bbit();
     const done = sim.step();
     const cyc = sim.cycles();
     $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
     $("accv").textContent = String(u32(sim.acc()));
+    setProg(cyc);
     showActive(cyc, bit);
     pulseAcc();
     if (done) finish(inA, inB, inM, cyc);
@@ -125,21 +141,24 @@
     $("btn_step").addEventListener("click", stepOne);
     ["in_a", "in_b", "in_m"].forEach((id) =>
       $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") run(); }));
-    $("status").innerHTML = 'ready · the real <span class="mono">mulmod.v</span> is loaded — press Run';
+    $("status").innerHTML = 'ready · the real <span class="mono">mulmod.v</span> is loaded';
+    setState("READY", "stby");
     run(); // show it working immediately
   }
 
   window.addEventListener("DOMContentLoaded", () => {
     if (typeof createMulmodSim !== "function") {
-      $("status").innerHTML = '<span style="color:#ff8f8f">WASM module failed to load</span>';
+      setState("FAULT", "fault");
+      $("status").innerHTML = '<span class="fault">WASM module failed to load</span>';
       return;
     }
     createMulmodSim().then(boot).catch((e) => {
-      $("status").innerHTML = '<span style="color:#ff8f8f">init error: ' + e + "</span>";
+      setState("FAULT", "fault");
+      $("status").innerHTML = '<span class="fault">init error: ' + e + "</span>";
     });
   });
 
-  // copy buttons
+  // copy buttons (unused on the current page, kept for reuse)
   window.copyCode = function (id, btn) {
     const el = $(id); if (!el) return;
     navigator.clipboard.writeText(el.innerText).then(() => {
