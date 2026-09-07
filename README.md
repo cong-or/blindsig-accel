@@ -12,8 +12,6 @@ integration proof-of-concept for a larger project: open hardware for blind signa
 Live demo, running the real `mulmod.v` compiled to WebAssembly:
 <https://cong-or.github.io/blindsig-accel/>. Project site: <https://blindsig-hardware.org>.
 
-![The mulmod datapath: a constant-time bit-serial modular multiplier — double, reduce, add, reduce, select — looping into the accumulator, at a fixed 33-cycle latency](doc/datapath.png)
-
 ## Status
 
 A feasibility prototype, not the finished accelerator. It proves the open toolchain and the
