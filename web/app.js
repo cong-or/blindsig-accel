@@ -72,7 +72,7 @@
     setState(ok ? "DONE" : "FAULT", ok ? "done" : "fault");
     setRes(ok ? String(res) : "ERR", !ok);
     $("status").innerHTML = ok
-      ? `VERIFIED · ${u32(a)}·${u32(b)} mod ${u32(m)} = <b>${res}</b> · ${cycles} cycles · matches (a·b) mod m`
+      ? `VERIFIED · result matches (a·b) mod m · ${cycles} cycles`
       : `<span class="fault">FAULT · got ${res}, expected ${exp}</span>`;
     // constant-time evidence
     const log = $("ctlog");
