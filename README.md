@@ -40,6 +40,15 @@ The register interface, the `mulmod`/`redmod` primitives, the formal harness, an
 integration all carry over directly: the funded work builds on this foundation, it doesn't
 restart from it.
 
+**Three things you see here are deliberate stand-ins for the funded design** — chosen to
+de-risk the hard parts without over-building the throwaway ones:
+
+- **Reducer:** conditional subtraction → **Montgomery reduction** (same constant-time, bit-serial structure)
+- **Host core:** **PicoRV32** → **VexRiscv** (the MMIO pattern is identical — a bus-adapter change, not a redesign)
+- **Sim / verify:** **Icarus** testbenches + SymbiYosys proofs → adds **Verilator** co-simulation against the `blind-rsa` software reference
+
+Each is a swap *within* the proven structure. The full plan is in the [roadmap](#roadmap).
+
 ## Why this matters
 
 Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a
@@ -53,6 +62,31 @@ generalises to the modular-arithmetic, elliptic-curve, and post-quantum primitiv
 ecosystem needs next. And because the whole path from source to bitstream is open and
 reproducible, the components are auditable — the openness that enables the verification is
 also the supply-chain-integrity story, with no proprietary black box between design and gate.
+
+## Roadmap
+
+**In the funded grant — this prototype, scaled up:**
+
+- Montgomery reduction at full **RSA-2048 / 3072** widths
+- A **modular-exponentiation** pipeline (square-and-multiply) driving **blind RSA**
+- **Blind Schnorr** via a single-modular-multiply mode of the same core
+- Port to **VexRiscv** as an MMIO peripheral
+- **Verilator co-simulation** against the `blind-rsa` software reference
+- **ECP5 synthesis** through the open Yosys/nextpnr/Trellis flow — reproducible build, plus a resource/timing report
+
+**Beyond the grant — where the pipeline goes:**
+
+- **Side-channel hardening.** Timing leakage is designed out today; the next stage adds power/EM
+  leakage assessment (TVLA) and formal masking verification as an extra verification pass.
+  Physical power analysis needs lab measurement, so it sits just outside this simulation-focused
+  grant — it is the natural follow-on.
+- **Supply-chain integrity.** A fully reproducible *source → RTL → bitstream* build, so a component
+  can be rebuilt and audited rather than trusted — provenance by reproducibility, not by an
+  attestation you cannot check.
+- **A catalogue for builders.** The same pipeline applied to more primitives — modular arithmetic,
+  elliptic-curve, hashing, post-quantum — each permissively licensed and shipped *with its proofs*,
+  so a builder can pull a verified component off the shelf and re-check its guarantees in CI.
+  Making secure open-hardware building blocks this accessible is the point.
 
 ## Layout
 
