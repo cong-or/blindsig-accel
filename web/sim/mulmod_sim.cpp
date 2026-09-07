@@ -67,6 +67,11 @@ int      sim_busy()   { return g_top->busy ? 1 : 0; }
 // The live accumulator inside the real datapath (acc is 33 bits; acc < m fits 32).
 uint32_t sim_acc() { return (uint32_t)g_top->rootp->mulmod__DOT__acc; }
 
+// The active b bit inside the real datapath: b_reg shifts left each cycle and its
+// MSB is what selects the add path (step = b_reg[WIDTH-1] ? red2 : red1). Reading
+// this drives the animation from the circuit itself, not from a JS re-derivation.
+int sim_bbit() { return (int)((g_top->rootp->mulmod__DOT__b_reg >> 31) & 1u); }
+
 }  // extern "C"
 
 #ifndef __EMSCRIPTEN__

@@ -28,6 +28,14 @@
     box.setAttribute("stroke", "#7fe9e2");
     setTimeout(() => box.setAttribute("stroke", "#37d6cf"), STEP_MS * 0.7);
   }
+  // Highlight the stages the circuit exercises this cycle, from the real b bit:
+  // b-bit set => the add path (`+ a` / red2) is live; clear => just double-and-
+  // reduce. cyc < 2 is the load cycle, before any compute has happened.
+  function showActive(cyc, bit) {
+    if (cyc < 2) setActive([]);
+    else if (bit) setActive(["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"]);
+    else setActive(["s_dbl", "s_red1", "s_mux"]);
+  }
 
   function u32(x) { return (x >>> 0); }
   function bigMulMod(a, b, m) { return Number((BigInt(u32(a)) * BigInt(u32(b))) % BigInt(u32(m))); }
@@ -71,16 +79,12 @@
     $("resv").textContent = "…";
     setRunning(true);
     timer = setInterval(() => {
+      const bit = sim.bbit();          // real b_reg MSB — the bit this step consumes
       const done = sim.step();
       const cyc = sim.cycles();
-      const total = 33;
-      $("cyc").textContent = String(cyc).padStart(2, "0") + " / " + total;
+      $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
       $("accv").textContent = String(u32(sim.acc()));
-      // reflect the real per-cycle b-bit: MSB-first, iteration k processes bit (33-cyc)
-      const bit = (cyc >= 2 && cyc <= 33) ? ((u32(b) >>> (33 - cyc)) & 1) : -1;
-      if (bit === 1) setActive(["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"]);
-      else if (bit === 0) setActive(["s_dbl", "s_red1", "s_mux"]);
-      else setActive([]);
+      showActive(cyc, bit);
       pulseAcc();
       if (done) { stop(); finish(a, b, m, cyc); }
     }, STEP_MS);
@@ -92,12 +96,12 @@
       const { a, b, m } = readInputs(); inA = a; inB = b; inM = m;
       sim.reset(); sim.load(a, b, m); $("resv").textContent = "…"; setRunning(true, true);
     }
+    const bit = sim.bbit();          // real b_reg MSB — the bit this step consumes
     const done = sim.step();
     const cyc = sim.cycles();
     $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
     $("accv").textContent = String(u32(sim.acc()));
-    const bit = (cyc >= 2 && cyc <= 33) ? ((u32(inB) >>> (33 - cyc)) & 1) : -1;
-    setActive(bit === 1 ? ["s_dbl","s_red1","s_add","s_red2","s_mux"] : bit === 0 ? ["s_dbl","s_red1","s_mux"] : []);
+    showActive(cyc, bit);
     pulseAcc();
     if (done) finish(inA, inB, inM, cyc);
   }
@@ -115,6 +119,7 @@
       result: Module.cwrap("sim_result", "number", []),
       cycles: Module.cwrap("sim_cycles", "number", []),
       acc:    Module.cwrap("sim_acc", "number", []),
+      bbit:   Module.cwrap("sim_bbit", "number", []),
     };
     $("btn_run").addEventListener("click", run);
     $("btn_step").addEventListener("click", stepOne);
