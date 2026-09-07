@@ -105,15 +105,21 @@
   <rect x="606" y="436" width="250" height="40" rx="20" fill="#0c1930" stroke="#c8912f" stroke-width="1.1"/>
   <text x="628" y="461" class="kick" fill="#e2c48d">★ FORMALLY VERIFIED · SYMBIYOSYS</text>
 
+  <!-- forward pipeline -->
   <g fill="none" stroke="#3c5680" stroke-width="1.6" marker-end="url(#arr)">
     <path d="M384 236 H408"/><path d="M544 236 H568"/><path d="M688 236 H712"/><path d="M848 236 H872"/><path d="M998 236 H1052"/>
-    <path d="M216 204 H240 V236 H264"/>
-    <path d="M216 284 C 700 284, 780 284, 935 276"/>
-    <path d="M216 364 C 300 364, 460 280, 476 266"/>
   </g>
-  <path d="M216 364 C 420 440, 720 440, 780 266" fill="none" stroke="#3c5680" stroke-width="1.3" stroke-dasharray="4 4"/>
-  <path d="M1142 278 V318 C 1142 350, 324 350, 324 284 V266" fill="none" stroke="#37d6cf" stroke-width="1.5" stroke-opacity="0.55" marker-end="url(#arr)"/>
-  <text x="700" y="344" text-anchor="middle" class="mux" fill="#4fb6b0">acc ← step   (loop WIDTH times)</text>
+  <!-- operand + modulus fan-in (orthogonal traces) -->
+  <g fill="none" stroke="#3c5680" stroke-width="1.4" marker-end="url(#arr)">
+    <path d="M216 204 V188 H628 V206"/>          <!-- a_reg  → + a       -->
+    <path d="M216 284 V292 H935 V266"/>          <!-- b_reg  → select    -->
+    <path d="M216 364 V320 H476 V266"/>          <!-- m_reg  → reduce ①  -->
+    <path d="M476 320 H780 V266"/>               <!-- m_reg bus → reduce ② -->
+  </g>
+  <!-- feedback: acc → ×2 (the loop) -->
+  <path d="M1142 278 V352 H324 V266" fill="none" stroke="#37d6cf" stroke-width="1.5" stroke-opacity="0.6" marker-end="url(#arr)"/>
+  <text x="712" y="344" text-anchor="middle" class="mux" fill="#4fb6b0">acc ← step · loop 32×</text>
+  <!-- acc → result -->
   <path d="M1142 278 V360" fill="none" stroke="#2f9e6f" stroke-width="1.5" marker-end="url(#arr)"/>
 </svg>
     </div>
