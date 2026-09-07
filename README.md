@@ -1,11 +1,18 @@
 # Blind Signature Accelerator — RISC-V Integration Prototype
 
+[![Live demo](https://img.shields.io/badge/live%20demo-real%20RTL%20in%20your%20browser-06b6d4?logo=webassembly&logoColor=white)](https://cong-or.github.io/blindsig-accel/)
+[![Formally verified](https://img.shields.io/badge/formally%20verified-SymbiYosys-22c55e)](blindsig-rtl#formal-verification)
+[![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
+
 An open-source hardware accelerator peripheral for a RISC-V SoC, together with the
 firmware that drives it. This repository is the **integration proof-of-concept** for a
 larger project: an open hardware accelerator for blind signature operations (blind RSA
 and blind Schnorr) targeting RISC-V soft cores on FPGA.
 
-Project site: <https://blindsig-hardware.org> · **Live demo (real RTL in your browser):** <https://cong-or.github.io/blindsig-accel/>
+**[▶ Try the live demo](https://cong-or.github.io/blindsig-accel/)** — the real `mulmod.v`,
+compiled to WebAssembly, animating the datapath one cycle at a time in your browser.
+Project site: <https://blindsig-hardware.org>
 
 ![Composable open hardware — your project contains the SoC, which contains the accelerator, which contains the reusable modular-multiplier core](doc/composability.png)
 
@@ -14,39 +21,24 @@ design, the accelerator into any RISC-V SoC, the SoC into your product.
 
 ## Status — read this first
 
-This is a **feasibility prototype**, not the finished accelerator. Its job is to prove
-the toolchain and the CPU↔accelerator integration end-to-end, so that the hard
-cryptographic work can be built on a de-risked foundation.
+This is a **feasibility prototype**, not the finished accelerator. Its job is to prove the
+open toolchain and the CPU↔accelerator integration end-to-end, so the hard cryptographic
+work is built on a de-risked foundation. The arithmetic is real and constant-time — there
+is **no behavioural `*`/`%` anywhere in the datapath** — but it operates on a single 32-bit
+word today, reducing by conditional subtraction.
 
-**What works today (and is tested in simulation):**
+| ✅ Working today — simulated, and formally proven | 🔨 What the grant scales it to |
+|---|---|
+| Constant-time, bit-serial modular multiplier `(a·b) mod m` + matching reducer | Full **RSA-2048 / 3072** widths, keeping the same constant-time bit-serial structure |
+| **Formally verified** (SymbiYosys): unbounded k-induction on the reduction invariant + exhaustive BMC equivalence | **Montgomery reduction** at full width, in place of conditional subtraction |
+| `operand² mod modulus` — the modular-squaring inner step (test vector `10² mod 7 = 2`) | A full **modular-exponentiation** pipeline (square-and-multiply) + **blind Schnorr** |
+| PicoRV32 SoC + C and bare-metal Rust firmware: the whole `CPU → bus → accelerator → result` path runs in sim | **VexRiscv** target — the MMIO pattern is identical, so the port is a bus-adapter change |
+| Icarus Verilog testbenches against an in-bench reference oracle | **Verilator** co-simulation against the `blind-rsa` software reference |
+|   | Synthesis to the **Lattice ECP5** via the open Yosys/nextpnr/Trellis flow |
 
-- A **constant-time modular multiplier** in Verilog (`(a·b) mod m`, bit-serial, fixed
-  cycle count independent of the operands) plus a matching modular reducer —
-  **formally verified** with SymbiYosys (unbounded k-induction proof of the reduction
-  invariant at 32-bit; exhaustive equivalence proof at reduced width).
-- A memory-mapped accelerator peripheral wrapping those datapaths, computing
-  `operand² mod modulus` — no behavioural `*`/`%`, so it is constant-time end to end.
-- A PicoRV32 RISC-V SoC that integrates the accelerator on a memory-mapped bus.
-- C firmware and a bare-metal Rust (`no_std`) driver that drive the accelerator and read
-  results back — the full `CPU → bus → accelerator → result` path runs end-to-end.
-
-**What is single-word today, and what the funded scope adds:** the arithmetic is real and
-constant-time but operates on a single 32-bit word. The operation is a modular squaring
-(`operand² mod modulus`, test vector `10² mod 7 = 2`) — the inner step of the
-square-and-multiply modular exponentiation the full design is built around. The multiplier
-reduces by conditional subtraction; the funded work keeps this constant-time,
-formally-verified, bit-serial structure but replaces the reduction with **Montgomery
-reduction**, scales it to full RSA-2048/3072 widths, chains it into a modular-exponentiation
-pipeline, adds blind Schnorr, and synthesises to the Lattice ECP5 via the open
-Yosys/nextpnr/Trellis toolchain. The funded work also cross-checks the RTL against the
-`blind-rsa` software reference under **Verilator** co-simulation; the prototype's
-testbenches run under Icarus Verilog against an in-bench reference oracle, and the
-multiplier is additionally proven equivalent to `(a·b) mod m` by SymbiYosys. The register
-interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC integration
-all carry over directly.
-
-The current core also runs on **PicoRV32**; the proposed target core is **VexRiscv**.
-The MMIO integration pattern is identical, so the port is a bus-adapter change.
+The register interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC
+integration all carry over directly: the funded work builds on this foundation, it doesn't
+restart from it.
 
 ## Layout
 
