@@ -1,0 +1,28 @@
+# Roadmap
+
+The funded work is five milestones, from the grant proposal. The prototype in this repository is a
+feasibility spike: it de-risks the methods behind several of them but completes none. Where each
+stands today:
+
+| Milestone | Deliverable | Status |
+|---|---|---|
+| M1 | Montgomery modular multiplier and property verification | Partial. A constant-time multiplier exists and is formally verified, but reduces by conditional subtraction; Montgomery is not yet built. |
+| M2 | Modular-exponentiation pipeline and blind RSA | Not started. The core computes a single `operand²` squaring, not the square-and-multiply pipeline. |
+| M3 | Blind Schnorr and SymbiYosys formal verification | Partial. The formal method is proven out at 32-bit width; blind Schnorr is not built. |
+| M4 | VexRiscv integration, Rust firmware, co-simulation | Partial. Integrated on PicoRV32 with C and Rust firmware; the VexRiscv port and Verilator co-simulation are not done. |
+| M5 | ECP5 synthesis, docs, reproducible build | Not started. Simulation only; not yet synthesised to FPGA fabric. |
+
+In short: what runs today is a formally-verified, constant-time modular squaring on a 32-bit word,
+integrated into a RISC-V SoC in simulation. The blind-signature operations themselves are still ahead.
+
+## Beyond the grant
+
+The same pipeline extends to:
+
+- **Side-channel hardening** — timing leakage is designed out today; the next stage adds power and EM
+  leakage assessment (TVLA) and formal masking verification. Physical power analysis needs lab
+  measurement, so it sits just outside this simulation-focused grant.
+- **Supply-chain integrity** — a fully reproducible source-to-bitstream build, so a component can be
+  rebuilt and audited rather than trusted.
+- **A catalogue for builders** — the same method applied to more primitives (modular arithmetic,
+  elliptic-curve, hashing, post-quantum), each permissively licensed and shipped with its proofs.
