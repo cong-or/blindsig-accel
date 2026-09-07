@@ -63,6 +63,12 @@ ecosystem needs next. And because the whole path from source to bitstream is ope
 reproducible, the components are auditable — the openness that enables the verification is
 also the supply-chain-integrity story, with no proprietary black box between design and gate.
 
+As generation — of code, of RTL, even of proofs — increasingly automates, the part that has to stay
+legible is the *claim*: the properties here are written in plain terms (the accumulator stays reduced;
+the result equals `(a·b) mod m`) and re-proved from source by a small, open checker anyone can run. A
+machine can search for a proof; a human still has to be able to read what was proved and re-check it —
+and that is the part that does not commoditise.
+
 ## Roadmap
 
 The funded work is organised as five milestones (from the grant proposal). The prototype in
