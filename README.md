@@ -5,86 +5,79 @@
 [![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
 
-An open-source hardware accelerator peripheral for a RISC-V SoC, together with the
-firmware that drives it. This repository is the **integration proof-of-concept** for a
-larger project: an open hardware accelerator for blind signature operations (blind RSA
-and blind Schnorr) targeting RISC-V soft cores on FPGA.
+An open-source hardware accelerator for a RISC-V SoC, with the firmware that drives it. It is the
+integration proof-of-concept for a larger project: open hardware for blind signature operations
+(blind RSA and blind Schnorr) on RISC-V soft cores and FPGA.
 
-**[▶ Try the live demo](https://cong-or.github.io/blindsig-accel/)** — the real `mulmod.v`,
-compiled to WebAssembly, animating the datapath one cycle at a time in your browser.
-Project site: <https://blindsig-hardware.org>
+Live demo: the real `mulmod.v`, compiled to WebAssembly, animating the datapath one clock at a time —
+<https://cong-or.github.io/blindsig-accel/>. Project site: <https://blindsig-hardware.org>.
 
 ![Composable open hardware — your project contains the SoC, which contains the accelerator, which contains the reusable modular-multiplier core](doc/composability.png)
 
-Each layer is independently reusable: the `mulmod` core drops into any modular-arithmetic
-design, the accelerator into any RISC-V SoC, the SoC into your product.
+Each layer is independently reusable: the `mulmod` core drops into any modular-arithmetic design, the
+accelerator into any RISC-V SoC, the SoC into your product.
 
-## Status — read this first
+## Status
 
-This is a **feasibility prototype**, not the finished accelerator. Its job is to prove the
-open toolchain and the CPU↔accelerator integration end-to-end, so the hard cryptographic
-work is built on a de-risked foundation. The arithmetic is real and constant-time — there
-is **no behavioural `*`/`%` anywhere in the datapath** — but it operates on a single 32-bit
-word today, reducing by conditional subtraction. Exactly what's done versus what the grant
-builds is in the [roadmap](#roadmap).
+This is a feasibility prototype, not the finished accelerator. Its job is to prove the open toolchain
+and the CPU–accelerator integration end to end, so the hard cryptographic work starts from a de-risked
+foundation. The arithmetic is real and constant-time — no behavioural `*` or `%` anywhere in the
+datapath — but it operates on a single 32-bit word today, reducing by conditional subtraction. What is
+done, and what the grant builds, is in the [roadmap](#roadmap).
 
-**Three things you see here are deliberate stand-ins for the funded design** — each a swap
-*within* the proven structure, not a redesign:
+Three parts of what you see are deliberate stand-ins for the funded design, each a swap within the
+proven structure rather than a redesign:
 
-- **Reducer:** conditional subtraction → **Montgomery reduction** (same constant-time, bit-serial structure)
-- **Host core:** **PicoRV32** → **VexRiscv** (identical MMIO pattern — a bus-adapter change)
-- **Sim / verify:** **Icarus** testbenches + SymbiYosys proofs → adds **Verilator** co-simulation against the `blind-rsa` reference
+- **Reducer** — conditional subtraction today; Montgomery reduction under the grant, keeping the same
+  constant-time, bit-serial structure.
+- **Host core** — PicoRV32 today; VexRiscv is the funded target. The MMIO pattern is identical, so the
+  port is a bus-adapter change.
+- **Simulation and proof** — Icarus testbenches and SymbiYosys today; Verilator co-simulation against
+  the `blind-rsa` reference is added under the grant.
 
-The register interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC
-integration all carry over directly — the funded work builds on this foundation.
+The register interface, the `mulmod` and `redmod` primitives, the formal harness, and the SoC
+integration all carry over directly.
 
 ## Roadmap
 
-The funded work is organised as five milestones (from the grant proposal). The prototype in
-this repository is a **feasibility spike**: it de-risks the *methods* behind several of them,
-but completes **none** — here is exactly where each stands.
+The funded work is five milestones, from the grant proposal. The prototype here is a feasibility
+spike: it de-risks the methods behind several of them but completes none. Where each stands today:
 
-| Milestone | Deliverable | Status in this repo |
+| Milestone | Deliverable | Status |
 |---|---|---|
-| **M1** | Montgomery modular multiplier + property verification | 🟡 **Partial** — a constant-time modular multiplier exists and is formally verified, but it reduces by **conditional subtraction**; Montgomery reduction is not yet built |
-| **M2** | Modular-exponentiation pipeline + blind RSA | 🔴 **Not started** — the accelerator does a single `operand²` squaring, not the square-and-multiply pipeline, and no blind-RSA operation exists yet |
-| **M3** | Blind Schnorr + SymbiYosys formal verification | 🟡 **Partial** — the formal method is proven out (k-induction + BMC) at 32-bit / reduced width; **blind Schnorr is not built** |
-| **M4** | VexRiscv MMIO integration + Rust firmware + co-sim | 🟡 **Partial** — integrated end-to-end on **PicoRV32** with C and Rust firmware; the **VexRiscv** port and **Verilator** co-simulation are not done |
-| **M5** | ECP5 synthesis + docs + reproducible build | 🔴 **Not started** — simulation only; the design has **never been synthesised to FPGA fabric** (no timing, no fit) |
+| M1 | Montgomery modular multiplier and property verification | Partial. A constant-time multiplier exists and is formally verified, but reduces by conditional subtraction; Montgomery is not yet built. |
+| M2 | Modular-exponentiation pipeline and blind RSA | Not started. The core computes a single `operand²` squaring, not the square-and-multiply pipeline. |
+| M3 | Blind Schnorr and SymbiYosys formal verification | Partial. The formal method is proven out at 32-bit width; blind Schnorr is not built. |
+| M4 | VexRiscv integration, Rust firmware, co-simulation | Partial. Integrated on PicoRV32 with C and Rust firmware; the VexRiscv port and Verilator co-simulation are not done. |
+| M5 | ECP5 synthesis, docs, reproducible build | Not started. Simulation only; not yet synthesised to FPGA fabric. |
 
-In short: what runs today is a formally-verified, constant-time modular *squaring* on a 32-bit
-word, integrated into a RISC-V SoC in simulation. The blind-signature operations themselves —
-the point of the project — are still ahead.
+In short: what runs today is a formally-verified, constant-time modular squaring on a 32-bit word,
+integrated into a RISC-V SoC in simulation. The blind-signature operations themselves are still ahead.
 
-**Beyond the grant — where the pipeline goes:**
+Beyond the grant, the same pipeline extends to:
 
-- **Side-channel hardening.** Timing leakage is designed out today; the next stage adds power/EM
-  leakage assessment (TVLA) and formal masking verification as an extra verification pass.
-  Physical power analysis needs lab measurement, so it sits just outside this simulation-focused
-  grant — it is the natural follow-on.
-- **Supply-chain integrity.** A fully reproducible *source → RTL → bitstream* build, so a component
-  can be rebuilt and audited rather than trusted — provenance by reproducibility, not by an
-  attestation you cannot check.
-- **A catalogue for builders.** The same pipeline applied to more primitives — modular arithmetic,
-  elliptic-curve, hashing, post-quantum — each permissively licensed and shipped *with its proofs*,
-  so a builder can pull a verified component off the shelf and re-check its guarantees in CI.
-  Making secure open-hardware building blocks this accessible is the point.
+- **Side-channel hardening** — timing leakage is designed out today; the next stage adds power and EM
+  leakage assessment (TVLA) and formal masking verification. Physical power analysis needs lab
+  measurement, so it sits just outside this simulation-focused grant.
+- **Supply-chain integrity** — a fully reproducible source-to-bitstream build, so a component can be
+  rebuilt and audited rather than trusted.
+- **A catalogue for builders** — the same method applied to more primitives (modular arithmetic,
+  elliptic-curve, hashing, post-quantum), each permissively licensed and shipped with its proofs.
 
 ## Layout
 
-The three components are independently useful and each has its own README:
+Three components, each independently useful, each with its own README:
 
-| Directory | What | Reusable as |
+| Directory | What it is | Reusable as |
 |---|---|---|
-| [`blindsig-rtl/`](blindsig-rtl/) | Constant-time modular multiplier + reducer + the accelerator peripheral, with testbenches | `mulmod` is reusable for any modular arithmetic (RSA/DH/ECC/ZK) |
-| [`blindsig-soc/`](blindsig-soc/) | PicoRV32 SoC integrating CPU + accelerator, with C and Rust firmware | An integration reference for wiring an accelerator to a RISC-V core |
+| [`blindsig-rtl/`](blindsig-rtl/) | Constant-time modular multiplier and reducer, plus the accelerator peripheral, with testbenches | `mulmod` for any modular arithmetic (RSA, DH, ECC, ZK) |
+| [`blindsig-soc/`](blindsig-soc/) | PicoRV32 SoC integrating CPU and accelerator, with C and Rust firmware | A reference for wiring an accelerator to a RISC-V core |
 | [`blindsig-fw/`](blindsig-fw/) | Bare-metal Rust (`no_std`) MMIO driver | A firmware driver library for constrained devices |
 
 ```
 blindsig-rtl  ──(accelerator RTL)──┐
                                     ├─►  blindsig-soc  (PicoRV32 + accel + firmware)
 blindsig-fw   ──(driver API)────────┘     proves the full stack in simulation
-   register map & sequence mirrored in the SoC's C firmware
 ```
 
 ## Register interface
@@ -99,72 +92,59 @@ Base address `0x2000_0000`:
 | `0x0C` | RESULT  | result output |
 | `0x10` | MODULUS | modulus input |
 
-Sequence: `reset → load_mod → load_op → start → wait(DONE) → read`.
+Sequence: reset, load modulus, load operand, start, wait for DONE, read.
 
 ## Building and testing
 
-Requires [Icarus Verilog](https://steveicarus.github.io/iverilog/) (`iverilog`/`vvp`).
-The SoC firmware additionally needs a bare-metal RISC-V C toolchain
-(`riscv-none-elf-gcc`, e.g. the [xPack](https://xpack.github.io/) build) on `PATH`.
+Requires [Icarus Verilog](https://steveicarus.github.io/iverilog/). The SoC firmware also needs a
+bare-metal RISC-V C toolchain (`riscv-none-elf-gcc`, e.g. the [xPack](https://xpack.github.io/) build)
+on `PATH`.
 
 ```sh
-# Accelerator RTL testbench (no C toolchain needed)
-cd blindsig-rtl && make          # → "ALL TESTS PASSED" (4/4)
-
-# Full SoC integration test (needs riscv-none-elf-gcc)
-cd blindsig-soc && make          # → "PASS: Integration test succeeded"
-
-# Everything, with narration
-./test.sh --ci
+cd blindsig-rtl && make     # accelerator RTL testbench (no C toolchain needed)
+cd blindsig-soc && make     # full SoC integration test (needs riscv-none-elf-gcc)
+./test.sh --ci              # everything, with narration
 ```
 
 ## What's guaranteed — and how you check it
 
-You don't have to take any of this on trust — the proofs are re-runnable objects, not claims. Here is
-exactly what is proven, what you must trust, and how to confirm it yourself.
+The proofs are re-runnable objects, not claims. What is proven, what you have to trust, and how to
+confirm it:
 
-**The claims, in plain terms:**
+1. **Correct** — the result equals `(a·b) mod m`, proven exhaustively by bounded model checking at a
+   reduced width against an independent reference.
+2. **Reduced throughout** — the accumulator stays below `m` at every step, proven unbounded by
+   k-induction at the full 32-bit width.
+3. **Constant-time** — every multiplication takes the same number of cycles regardless of the
+   operands, asserted by the testbench across the full input range.
 
-1. **Correct** — the result equals `(a·b) mod m`, proven exhaustively by BMC at a reduced width
-   against an independent reference.
-2. **Reduced throughout** — the accumulator stays `< m` at every step (the modular-arithmetic
-   invariant), proven unbounded by k-induction at the full 32-bit width.
-3. **Constant-time** — every multiplication takes the same fixed cycle count regardless of the
-   operands, asserted by the testbench across the range `0` to `(m-1)²`.
+What you have to trust: only the open checker (Yosys and its SAT/SMT solver) and the Verilog
+semantics — not the author, and not any tool that helped write the RTL.
 
-**What you actually have to trust:** not the author, and not any tool that helped write the RTL — only
-the open checker itself (Yosys and its SAT/SMT solver) and the Verilog semantics. If you trust the
-checker, you can ignore everything else and still know the claims hold.
-
-**How to re-check:** `cd blindsig-rtl && make formal` re-runs the k-induction and BMC proofs from a
-clean clone with open tools; `make` re-runs the constant-latency simulation. Nothing here depends on
-who — or what — wrote the code.
+How to re-check: `cd blindsig-rtl && make formal` re-runs the k-induction and equivalence proofs from
+a clean clone; `make` re-runs the constant-latency simulation.
 
 ## Why this matters
 
-Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a
-closed toolchain — you take the security on faith. The lasting output of this project is not
-one accelerator but a **reproducible pipeline for trustworthy crypto hardware**:
-constant-time-by-construction RTL, formally verified with an open prover, cross-checked
-against a software reference, synthesised end-to-end with a fully open flow, and re-verified
-in CI — so the security properties travel with the code as machine-checked proofs anyone can
-re-run. Blind signatures are the first primitive built this way; the same pipeline
-generalises to the modular-arithmetic, elliptic-curve, and post-quantum primitives the
-ecosystem needs next. And because the whole path from source to bitstream is open and
-reproducible, the components are auditable — the openness that enables the verification is
-also the supply-chain-integrity story, with no proprietary black box between design and gate.
+Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a closed
+toolchain. The lasting output of this project is not one accelerator but a reproducible pipeline for
+trustworthy crypto hardware: constant-time-by-construction RTL, formally verified with an open prover,
+cross-checked against a software reference, synthesised with a fully open flow, and re-verified in CI.
+The security properties travel with the code as machine-checked proofs anyone can re-run. Blind
+signatures are the first primitive built this way; the same pipeline generalises to the
+modular-arithmetic, elliptic-curve, and post-quantum primitives the ecosystem needs next.
 
-And as generation — of code, of RTL, even of proofs — automates, the scarce part is the *claim* a
-human can still read and re-check: a machine can search for a proof, but only a person can be
-accountable for what it proves — the properties above are stated plainly for exactly that reason.
+As generation — of code, of RTL, even of proofs — automates, the scarce part is the claim a human can
+still read and re-check: a machine can search for a proof, but only a person can be accountable for
+what it proves. The properties above are stated plainly for exactly that reason.
 
 ## Licensing
 
-- **Hardware** (Verilog RTL in `blindsig-rtl/` and the accelerator/bus RTL in
-  `blindsig-soc/`): [CERN-OHL-P-2.0](blindsig-rtl/LICENSE) (permissive open hardware).
-- **Software** (Rust driver, C firmware, tooling): dual-licensed
-  [MIT](LICENSE-MIT) OR [Apache-2.0](LICENSE-APACHE), at your option.
+- **Hardware** — Verilog RTL in `blindsig-rtl/` and the accelerator and bus RTL in `blindsig-soc/`,
+  under [CERN-OHL-P-2.0](blindsig-rtl/LICENSE).
+- **Software** — the Rust driver, C firmware, and tooling, under [MIT](LICENSE-MIT) or
+  [Apache-2.0](LICENSE-APACHE), at your option.
 
-`blindsig-soc/rtl/picorv32.v` is the third-party [PicoRV32](https://github.com/YosysHQ/picorv32)
-core by Claire Xenia Wolf, vendored unmodified under its original ISC license (see the file
-header). All other RTL, firmware, and tooling is original work.
+`blindsig-soc/rtl/picorv32.v` is the third-party [PicoRV32](https://github.com/YosysHQ/picorv32) core
+by Claire Xenia Wolf, vendored unmodified under its original ISC license. All other RTL, firmware, and
+tooling is original work.
