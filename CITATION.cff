@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it as below."
+title: "Blind Signature Accelerator — Open Hardware for RISC-V"
+abstract: >-
+  An open-source hardware accelerator for blind signature operations
+  (blind RSA and blind Schnorr) targeting RISC-V soft cores on FPGA: a
+  constant-time, formally-verified modular-arithmetic core, an MMIO
+  peripheral, a PicoRV32 SoC integration, and a bare-metal Rust driver —
+  built and verified end-to-end with a fully open toolchain.
+type: software
+authors:
+  - name: "cong-or"
+repository-code: "https://github.com/cong-or/blindsig-accel"
+url: "https://blindsig-hardware.org"
+version: "0.1.4"
+date-released: 2026-09-08
+license:
+  - Apache-2.0
+  - MIT
+  - CERN-OHL-P-2.0
+keywords:
+  - RISC-V
+  - FPGA
+  - Verilog
+  - cryptography
+  - blind signatures
+  - formal verification
+  - SymbiYosys
+  - open hardware
+  - hardware accelerator
