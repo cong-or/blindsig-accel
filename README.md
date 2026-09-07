@@ -9,13 +9,18 @@ An open-source hardware accelerator for a RISC-V SoC, with the firmware that dri
 integration proof-of-concept for a larger project: open hardware for blind signature operations
 (blind RSA and blind Schnorr) on RISC-V soft cores and FPGA.
 
+> **This is an early feasibility prototype — not the finished accelerator.** It proves the open
+> toolchain and the CPU–accelerator integration with a formally-verified, constant-time core, but the
+> blind-signature operations themselves are **not built yet**. It completes **none** of the five funded
+> milestones; the bulk of the work is what the grant funds. See the [roadmap](ROADMAP.md).
+
 Live demo, running the real `mulmod.v` compiled to WebAssembly:
 <https://cong-or.github.io/blindsig-accel/>. Project site: <https://blindsig-hardware.org>.
 
 ## Status
 
-A feasibility prototype, not the finished accelerator. It proves the open toolchain and the
-CPU–accelerator integration end to end, on a de-risked foundation. The arithmetic is real and
+What runs today proves the open toolchain and the CPU–accelerator integration end to end, on a
+de-risked foundation — the substantive cryptographic work is still ahead. The arithmetic is real and
 constant-time — no behavioural `*` or `%` in the datapath — on a single 32-bit word today.
 
 Three parts are deliberate stand-ins for the funded design, each a swap within the proven structure:
