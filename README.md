@@ -149,6 +149,28 @@ cd blindsig-soc && make          # → "PASS: Integration test succeeded"
 ./test.sh --ci
 ```
 
+## What's guaranteed — and how you check it
+
+You don't have to take any of this on trust — the proofs are re-runnable objects, not claims. Here is
+exactly what is proven, what you must trust, and how to confirm it yourself.
+
+**The claims, in plain terms:**
+
+1. **Correct** — the result equals `(a·b) mod m`, proven exhaustively by BMC at a reduced width
+   against an independent reference.
+2. **Reduced throughout** — the accumulator stays `< m` at every step (the modular-arithmetic
+   invariant), proven unbounded by k-induction at the full 32-bit width.
+3. **Constant-time** — every multiplication takes the same fixed cycle count regardless of the
+   operands, asserted by the testbench across the range `0` to `(m-1)²`.
+
+**What you actually have to trust:** not the author, and not any tool that helped write the RTL — only
+the open checker itself (Yosys and its SAT/SMT solver) and the Verilog semantics. If you trust the
+checker, you can ignore everything else and still know the claims hold.
+
+**How to re-check:** `cd blindsig-rtl && make formal` re-runs the k-induction and BMC proofs from a
+clean clone with open tools; `make` re-runs the constant-latency simulation. Nothing here depends on
+who — or what — wrote the code.
+
 ## Licensing
 
 - **Hardware** (Verilog RTL in `blindsig-rtl/` and the accelerator/bus RTL in
