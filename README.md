@@ -65,14 +65,21 @@ also the supply-chain-integrity story, with no proprietary black box between des
 
 ## Roadmap
 
-**In the funded grant — this prototype, scaled up:**
+The funded work is organised as five milestones (from the grant proposal). The prototype in
+this repository is a **feasibility spike**: it de-risks the *methods* behind several of them,
+but completes **none** — here is exactly where each stands.
 
-- Montgomery reduction at full **RSA-2048 / 3072** widths
-- A **modular-exponentiation** pipeline (square-and-multiply) driving **blind RSA**
-- **Blind Schnorr** via a single-modular-multiply mode of the same core
-- Port to **VexRiscv** as an MMIO peripheral
-- **Verilator co-simulation** against the `blind-rsa` software reference
-- **ECP5 synthesis** through the open Yosys/nextpnr/Trellis flow — reproducible build, plus a resource/timing report
+| Milestone | Deliverable | Status in this repo |
+|---|---|---|
+| **M1** | Montgomery modular multiplier + property verification | 🟡 **Partial** — a constant-time modular multiplier exists and is formally verified, but it reduces by **conditional subtraction**; Montgomery reduction is not yet built |
+| **M2** | Modular-exponentiation pipeline + blind RSA | 🔴 **Not started** — the accelerator does a single `operand²` squaring, not the square-and-multiply pipeline, and no blind-RSA operation exists yet |
+| **M3** | Blind Schnorr + SymbiYosys formal verification | 🟡 **Partial** — the formal method is proven out (k-induction + BMC) at 32-bit / reduced width; **blind Schnorr is not built** |
+| **M4** | VexRiscv MMIO integration + Rust firmware + co-sim | 🟡 **Partial** — integrated end-to-end on **PicoRV32** with C and Rust firmware; the **VexRiscv** port and **Verilator** co-simulation are not done |
+| **M5** | ECP5 synthesis + docs + reproducible build | 🔴 **Not started** — simulation only; the design has **never been synthesised to FPGA fabric** (no timing, no fit) |
+
+In short: what runs today is a formally-verified, constant-time modular *squaring* on a 32-bit
+word, integrated into a RISC-V SoC in simulation. The blind-signature operations themselves —
+the point of the project — are still ahead.
 
 **Beyond the grant — where the pipeline goes:**
 
