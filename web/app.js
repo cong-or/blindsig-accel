@@ -18,15 +18,15 @@
       const g = $(s); if (!g) return;
       const box = g.querySelector("rect");
       if (!box) return;
-      if (ids.includes(s)) { box.setAttribute("stroke", "#ffce7a"); box.setAttribute("filter", "url(#glowA)"); }
-      else { box.removeAttribute("filter"); box.setAttribute("stroke", s === "s_mux" ? "#c8912f" : "#31507d"); }
+      if (ids.includes(s)) { box.setAttribute("stroke", "#81e6d9"); box.setAttribute("filter", "url(#glowA)"); }
+      else { box.removeAttribute("filter"); box.setAttribute("stroke", s === "s_mux" ? "#2c7a7b" : "#2a3540"); }
     });
   }
   function pulseAcc() {
     const g = $("s_acc"); if (!g) return;
     const box = g.querySelector("rect");
-    box.setAttribute("stroke", "#7fe9e2");
-    setTimeout(() => box.setAttribute("stroke", "#37d6cf"), STEP_MS * 0.7);
+    box.setAttribute("stroke", "#81e6d9");
+    setTimeout(() => box.setAttribute("stroke", "#4fd1c5"), STEP_MS * 0.7);
   }
   // Highlight the stages the circuit exercises this cycle, from the real b bit:
   // b-bit set => the add path (`+ a` / red2) is live; clear => just double-and-
