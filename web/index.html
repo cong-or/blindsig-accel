@@ -28,13 +28,19 @@ timing is the whole point: on a general-purpose CPU, secrets leak through
 <a href="https://blindsig-hardware.org/#hardware">how long the work takes</a>; a fixed-function circuit
 cannot leak that way.</p>
 
-<p>The circuit below is the real thing — <span class="mono">mulmod.v</span> compiled to WebAssembly with
-Verilator. The result, the accumulator and the cycle count are read straight from the running hardware,
-not re-implemented in JavaScript.</p>
+<p>The circuit below is not a mock-up. It is <span class="hl">the exact synthesised logic</span> —
+<span class="mono">mulmod.v</span> run through Verilator into WebAssembly — stepped one clock at a time.
+The result, the live accumulator and the cycle count are read straight from the compiled circuit's
+registers; nothing is re-implemented in JavaScript, and every result is cross-checked against an
+independent <span class="mono">(a·b) mod m</span>.</p>
 
-<h2 class="section-head" id="circuit">the circuit, live</h2>
+<h2 class="section-head" id="circuit">the real circuit, live</h2>
 
 <div class="instrument">
+  <div class="prov">
+    <span class="prov-src"><span class="mono">mulmod.v</span> → Verilator → WebAssembly · the exact synthesised logic</span>
+    <span class="prov-note">every readout is live from the circuit's registers · <a href="https://github.com/cong-or/blindsig-accel/blob/main/web/sim/mulmod_sim.cpp">inspect the harness ↗</a></span>
+  </div>
   <div class="svgwrap">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" font-family="'Space Grotesk','Helvetica Neue',sans-serif">
   <defs>

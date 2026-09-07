@@ -41,6 +41,11 @@ p{margin:.75rem 0}
 
 /* ---- instrument ---- */
 .instrument{background:var(--panel);border:1px solid var(--line);margin:1.25rem 0}
+.prov{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem 1.25rem;padding:.55rem 1.1rem;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.03em}
+.prov-src{color:var(--teal)}
+.prov-note{color:var(--dim)}
+.prov-note a{color:var(--teal-dk)}
+.prov-note a:hover{color:var(--teal)}
 .instrument .svgwrap{display:block;width:100%}
 .instrument svg{display:block;width:100%;height:auto}
 .controls{display:flex;gap:1.25rem;flex-wrap:wrap;align-items:flex-end;padding:1.1rem 1.1rem .4rem;border-top:1px solid var(--line)}
