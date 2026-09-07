@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: OSS CAD Suite (iverilog, yosys, sby, verilator)
-        uses: YosysHQ/setup-oss-cad-suite@v3
+        uses: YosysHQ/setup-oss-cad-suite@v4
       - name: Unit test — constant-time modular multiplier
         run: |
           cd blindsig-rtl
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: OSS CAD Suite (iverilog)
-        uses: YosysHQ/setup-oss-cad-suite@v3
+        uses: YosysHQ/setup-oss-cad-suite@v4
       - name: RISC-V bare-metal toolchain (xPack)
         run: |
           url=https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v14.2.0-3/xpack-riscv-none-elf-gcc-14.2.0-3-linux-x64.tar.gz
@@ -58,23 +58,39 @@ jobs:
       - name: SoC integration test — Rust firmware
         run: cd blindsig-soc && make sim FW=rust CROSS=riscv-none-elf-
 
-  # ---- build the live WASM demo (real RTL in the browser) ------------------
+  # ---- rebuild the WASM demo from the RTL ----------------------------------
+  #      A buildability check (real mulmod.v -> WASM). It does NOT gate the
+  #      deploy: the built artifacts are already committed under web/wasm/, so
+  #      the live demo stays up even if the Emscripten/Verilator rebuild breaks.
   build-demo:
     needs: verify
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OSS CAD Suite (verilator)
+        uses: YosysHQ/setup-oss-cad-suite@v4
+      - name: Emscripten
+        uses: emscripten-core/setup-emsdk@v14
+      - name: Compile mulmod.v -> WASM
+        run: cd web/sim && ./build_wasm.sh
+
+  # ---- publish the live demo to GitHub Pages (main only) -------------------
+  #      Publishes the committed web/ assets, so it depends only on the RTL
+  #      passing — not on the Emscripten/Verilator rebuild above.
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Enable + configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
-      - name: OSS CAD Suite (verilator)
-        uses: YosysHQ/setup-oss-cad-suite@v3
-      - name: Emscripten
-        uses: mymindstorm/setup-emsdk@v14
-      - name: Compile mulmod.v -> WASM
-        run: cd web/sim && ./build_wasm.sh
-      - name: Assemble static site
+      - name: Assemble static site from committed web/
         run: |
           mkdir -p _site
           cp -r web/* _site/
@@ -82,15 +98,5 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-
-  # ---- publish to GitHub Pages (main only) --------------------------------
-  deploy:
-    needs: build-demo
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
       - id: deploy
         uses: actions/deploy-pages@v4
