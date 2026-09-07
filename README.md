@@ -36,6 +36,7 @@ bare-metal RISC-V C toolchain (`riscv-none-elf-gcc`) on `PATH`.
 cd blindsig-rtl && make        # simulate: unit test + accelerator
 cd blindsig-rtl && make formal # prove:    k-induction + equivalence (SymbiYosys)
 cd blindsig-soc && make        # full CPU -> accelerator integration test
+./test.sh --ci                 # all of the above, with narration
 ```
 
 ## What's proven

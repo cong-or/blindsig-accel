@@ -15,6 +15,9 @@ stands today:
 In short: what runs today is a formally-verified, constant-time modular squaring on a 32-bit word,
 integrated into a RISC-V SoC in simulation. The blind-signature operations themselves are still ahead.
 
+The register interface, the `mulmod` and `redmod` primitives, the formal harness, and the SoC
+integration all carry over directly — the funded work builds on this foundation rather than restarting.
+
 ## Beyond the grant
 
 The same pipeline extends to:
