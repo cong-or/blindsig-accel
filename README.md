@@ -25,29 +25,18 @@ This is a **feasibility prototype**, not the finished accelerator. Its job is to
 open toolchain and the CPU↔accelerator integration end-to-end, so the hard cryptographic
 work is built on a de-risked foundation. The arithmetic is real and constant-time — there
 is **no behavioural `*`/`%` anywhere in the datapath** — but it operates on a single 32-bit
-word today, reducing by conditional subtraction.
+word today, reducing by conditional subtraction. Exactly what's done versus what the grant
+builds is in the [roadmap](#roadmap).
 
-| ✅ Working today — simulated, and formally proven | 🔨 What the grant scales it to |
-|---|---|
-| Constant-time, bit-serial modular multiplier `(a·b) mod m` + matching reducer | Full **RSA-2048 / 3072** widths, keeping the same constant-time bit-serial structure |
-| **Formally verified** (SymbiYosys): unbounded k-induction on the reduction invariant + exhaustive BMC equivalence | **Montgomery reduction** at full width, in place of conditional subtraction |
-| `operand² mod modulus` — the modular-squaring inner step (test vector `10² mod 7 = 2`) | A full **modular-exponentiation** pipeline (square-and-multiply) + **blind Schnorr** |
-| PicoRV32 SoC + C and bare-metal Rust firmware: the whole `CPU → bus → accelerator → result` path runs in sim | **VexRiscv** target — the MMIO pattern is identical, so the port is a bus-adapter change |
-| Icarus Verilog testbenches against an in-bench reference oracle | **Verilator** co-simulation against the `blind-rsa` software reference |
-|   | Synthesis to the **Lattice ECP5** via the open Yosys/nextpnr/Trellis flow |
-
-The register interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC
-integration all carry over directly: the funded work builds on this foundation, it doesn't
-restart from it.
-
-**Three things you see here are deliberate stand-ins for the funded design** — chosen to
-de-risk the hard parts without over-building the throwaway ones:
+**Three things you see here are deliberate stand-ins for the funded design** — each a swap
+*within* the proven structure, not a redesign:
 
 - **Reducer:** conditional subtraction → **Montgomery reduction** (same constant-time, bit-serial structure)
-- **Host core:** **PicoRV32** → **VexRiscv** (the MMIO pattern is identical — a bus-adapter change, not a redesign)
-- **Sim / verify:** **Icarus** testbenches + SymbiYosys proofs → adds **Verilator** co-simulation against the `blind-rsa` software reference
+- **Host core:** **PicoRV32** → **VexRiscv** (identical MMIO pattern — a bus-adapter change)
+- **Sim / verify:** **Icarus** testbenches + SymbiYosys proofs → adds **Verilator** co-simulation against the `blind-rsa` reference
 
-Each is a swap *within* the proven structure. The full plan is in the [roadmap](#roadmap).
+The register interface, the `mulmod`/`redmod` primitives, the formal harness, and the SoC
+integration all carry over directly — the funded work builds on this foundation.
 
 ## Why this matters
 
@@ -63,11 +52,9 @@ ecosystem needs next. And because the whole path from source to bitstream is ope
 reproducible, the components are auditable — the openness that enables the verification is
 also the supply-chain-integrity story, with no proprietary black box between design and gate.
 
-As generation — of code, of RTL, even of proofs — increasingly automates, the part that has to stay
-legible is the *claim*: the properties here are written in plain terms (the accumulator stays reduced;
-the result equals `(a·b) mod m`) and re-proved from source by a small, open checker anyone can run. A
-machine can search for a proof; a human still has to be able to read what was proved and re-check it —
-and that is the part that does not commoditise.
+And as generation — of code, of RTL, even of proofs — automates, the scarce part is the *claim* a
+human can still read and re-check: a machine can search for a proof, but only a person can be
+accountable for what it proves. (What's proven here, and how to re-check it, is spelled out below.)
 
 ## Roadmap
 
