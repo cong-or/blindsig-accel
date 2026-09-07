@@ -1,0 +1,4 @@
+# Keep the language stats honest: exclude generated output and vendored code so
+# the bar reflects this project's own RTL / firmware, not tooling artefacts.
+web/wasm/*                       linguist-generated
+blindsig-soc/rtl/picorv32.v      linguist-vendored
