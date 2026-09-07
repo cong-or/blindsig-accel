@@ -64,6 +64,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enable + configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: OSS CAD Suite (verilator)
         uses: YosysHQ/setup-oss-cad-suite@v3
       - name: Emscripten
