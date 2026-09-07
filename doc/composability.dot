@@ -1,40 +1,40 @@
-// composability.dot — nested, reusable open-hardware layers (blueprint theme)
+// composability.dot — nested, reusable open-hardware layers (blindsig-hardware.org theme)
 // Generate: dot -Tsvg composability.dot -o composability.svg
 //           dot -Tpng -Gdpi=140 composability.dot -o composability.png
 
 digraph composability {
   rankdir=LR;
-  bgcolor="#0b1122";
-  fontname="Helvetica"; fontsize=18; labelloc="t"; fontcolor="#eaf1fb";
+  bgcolor="#0a0a0a";
+  fontname="Helvetica"; fontsize=18; labelloc="t"; fontcolor="#b8c5d0";
   label="Off-the-shelf, composable open hardware — each layer is independently reusable";
-  node  [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded", fontcolor="#eaf1fb"];
-  edge  [fontname="Helvetica", fontsize=10, color="#46618f", fontcolor="#8ba3c7"];
+  node  [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded", fontcolor="#b8c5d0"];
+  edge  [fontname="Helvetica", fontsize=10, color="#3a464e", fontcolor="#6b7a86"];
 
   subgraph cluster_project {
-    style="rounded,filled"; fillcolor="#12162b"; color="#5b6bb0"; penwidth=1.4;
+    style="rounded,filled"; fillcolor="#0c0d0f"; color="#46545e"; penwidth=1.4;
     label="  YOUR PROJECT   ·   offline ecash wallet · privacy device · secure element  ";
-    fontcolor="#b7a6ff"; fontsize=13;
+    fontcolor="#6b7a86"; fontsize=13;
 
     subgraph cluster_soc {
-      style="rounded,filled"; fillcolor="#0e1830"; color="#3a63b0"; penwidth=1.4;
+      style="rounded,filled"; fillcolor="#0b0f11"; color="#2c7a7b"; penwidth=1.4;
       label="  blindsig-soc   ·   drops into any RISC-V SoC — bus adapter only   ·   CERN-OHL-P  ";
-      fontcolor="#7fa8ff"; fontsize=12;
+      fontcolor="#4fd1c5"; fontsize=12;
 
-      cpu [label="RISC-V CPU\nPicoRV32 · VexRiscv · Ibex · SERV", fillcolor="#0e1a2c", color="#5b8def"];
-      bus [label="bus adapter\nvalid/ready → wen/ren", fillcolor="#0e1a2c", color="#5b8def"];
+      cpu [label="RISC-V CPU\nPicoRV32 · VexRiscv · Ibex · SERV", fillcolor="#101417", color="#2c7a7b"];
+      bus [label="bus adapter\nvalid/ready → wen/ren", fillcolor="#101417", color="#2c7a7b"];
 
       subgraph cluster_accel {
-        style="rounded,filled"; fillcolor="#0c1b17"; color="#2f9e6f"; penwidth=1.4;
+        style="rounded,filled"; fillcolor="#0b1210"; color="#3fa89c"; penwidth=1.4;
         label="  blindsig_accel   ·   drop-in MMIO peripheral   ·   5-register interface\l  reuse as a public-key coprocessor on any RISC-V SoC  ";
-        fontcolor="#8ff0c4"; fontsize=11;
+        fontcolor="#5fded0"; fontsize=11;
 
-        redmod [label="redmod\nx mod m\n(bring operand in range)", fillcolor="#0e1a2c", color="#2f9e6f"];
+        redmod [label="redmod\nx mod m\n(bring operand in range)", fillcolor="#101417", color="#3fa89c"];
 
         subgraph cluster_core {
-          style="rounded,filled"; fillcolor="#1a1608"; color="#c8912f"; penwidth=2;
+          style="rounded,filled"; fillcolor="#0d1513"; color="#81e6d9"; penwidth=2;
           label="  mulmod — the reusable core\l  reuse anywhere: RSA · DH · ECC · ZK · FHE  ";
-          fontcolor="#ffce7a"; fontsize=11;
-          mulmod [label="constant-time\nmodular multiplier\n(a·b) mod m\n\n★ formally verified", fillcolor="#171205", color="#ffce7a", penwidth=2, fontcolor="#ffdfa0"];
+          fontcolor="#81e6d9"; fontsize=11;
+          mulmod [label="constant-time\nmodular multiplier\n(a·b) mod m\n\n★ formally verified", fillcolor="#0e1614", color="#81e6d9", penwidth=2, fontcolor="#cdeeea"];
         }
       }
     }

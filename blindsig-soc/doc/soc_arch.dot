@@ -1,17 +1,17 @@
-// blindsig-soc architecture diagram (blueprint theme)
+// blindsig-soc architecture diagram (blindsig-hardware.org theme)
 // Generate: dot -Tsvg soc_arch.dot -o soc_arch.svg
 //           dot -Tpng -Gdpi=140 soc_arch.dot -o soc_arch.png
 
 digraph soc {
     rankdir=TB;
-    bgcolor="#0b1122";
+    bgcolor="#0a0a0a";
     fontname="Helvetica";
-    node [fontname="Helvetica", fontsize=11, fontcolor="#c7d5ea", shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9, color="#46618f", fontcolor="#8ba3c7"];
+    node [fontname="Helvetica", fontsize=11, fontcolor="#b8c5d0", shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9, color="#3a464e", fontcolor="#6b7a86"];
 
     // ── Firmware ──
     fw [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#26364e" COLSPAN="2"><FONT COLOR="#ffffff"><B>Firmware</B></FONT></TD></TR>
             <TR><TD>C</TD><TD>fw/test_accel.c</TD></TR>
             <TR><TD>Rust</TD><TD>fw-rust/ (blindsig-fw driver)</TD></TR>
@@ -20,7 +20,7 @@ digraph soc {
 
     // ── CPU ──
     cpu [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#3a63b0" COLSPAN="2"><FONT COLOR="#ffffff"><B>PicoRV32 CPU</B></FONT></TD></TR>
             <TR><TD>ISA</TD><TD>rv32i</TD></TR>
             <TR><TD>Clock</TD><TD>100 MHz</TD></TR>
@@ -29,7 +29,7 @@ digraph soc {
 
     // ── Address Decoder ──
     bus [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#4a5c73" COLSPAN="2"><FONT COLOR="#ffffff"><B>Address Decoder</B></FONT></TD></TR>
             <TR><TD>Select</TD><TD>mem_addr[31:28]</TD></TR>
             <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">rtl/soc_top.v</FONT></TD></TR>
@@ -37,7 +37,7 @@ digraph soc {
 
     // ── RAM ──
     ram [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#2f8f5a" COLSPAN="2"><FONT COLOR="#ffffff"><B>RAM</B></FONT></TD></TR>
             <TR><TD>Address</TD><TD>0x0000_0000</TD></TR>
             <TR><TD>Size</TD><TD>16 KB</TD></TR>
@@ -46,7 +46,7 @@ digraph soc {
 
     // ── Sim I/O ──
     simio [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#c8912f" COLSPAN="2"><FONT COLOR="#ffffff"><B>Sim I/O</B></FONT></TD></TR>
             <TR><TD>Address</TD><TD>0x1000_0000</TD></TR>
             <TR><TD>Write byte</TD><TD>print char</TD></TR>
@@ -55,7 +55,7 @@ digraph soc {
 
     // ── Bus Wrapper ──
     buswrap [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#7e5cbf" COLSPAN="2"><FONT COLOR="#ffffff"><B>Bus Wrapper</B></FONT></TD></TR>
             <TR><TD COLSPAN="2">valid/ready ↔ wen/ren</TD></TR>
             <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">rtl/blindsig_bus_wrap.v</FONT></TD></TR>
@@ -63,7 +63,7 @@ digraph soc {
 
     // ── Accelerator ──
     accel [label=<
-        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#2a3540">
             <TR><TD BGCOLOR="#c14a4a" COLSPAN="2"><FONT COLOR="#ffffff"><B>BlindSig Accelerator</B></FONT></TD></TR>
             <TR><TD>Address</TD><TD>0x2000_0000</TD></TR>
             <TR><TD>CTRL</TD><TD>+0x00 (start/reset/load)</TD></TR>
@@ -80,9 +80,9 @@ digraph soc {
 
     cpu -> bus [label=<
         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2">
-            <TR><TD><FONT COLOR="#8ba3c7">mem_valid / mem_ready</FONT></TD></TR>
-            <TR><TD><FONT COLOR="#8ba3c7">mem_addr / mem_wdata</FONT></TD></TR>
-            <TR><TD><FONT COLOR="#8ba3c7">mem_rdata / mem_wstrb</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#6b7a86">mem_valid / mem_ready</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#6b7a86">mem_addr / mem_wdata</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#6b7a86">mem_rdata / mem_wstrb</FONT></TD></TR>
         </TABLE>>, penwidth=2];
 
     bus -> ram     [label="  0x0___", penwidth=2, color="#2f8f5a"];

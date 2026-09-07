@@ -8,41 +8,41 @@
  viewBox="0.00 0.00 579.50 854.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 850.5)">
 <title>soc</title>
-<polygon fill="#0b1122" stroke="none" points="-4,4 -4,-850.5 575.5,-850.5 575.5,4 -4,4"/>
+<polygon fill="#0a0a0a" stroke="none" points="-4,4 -4,-850.5 575.5,-850.5 575.5,4 -4,4"/>
 <!-- fw -->
 <g id="node1" class="node">
 <title>fw</title>
 <polygon fill="#26364e" stroke="none" points="209.5,-817.5 209.5,-842.5 385.5,-842.5 385.5,-817.5 209.5,-817.5"/>
-<polygon fill="none" stroke="#31507d" points="209.5,-817.5 209.5,-842.5 385.5,-842.5 385.5,-817.5 209.5,-817.5"/>
+<polygon fill="none" stroke="#2a3540" points="209.5,-817.5 209.5,-842.5 385.5,-842.5 385.5,-817.5 209.5,-817.5"/>
 <text text-anchor="start" x="273.12" y="-826.05" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">Firmware</text>
-<polygon fill="none" stroke="#31507d" points="209.5,-792.5 209.5,-817.5 244.5,-817.5 244.5,-792.5 209.5,-792.5"/>
-<text text-anchor="start" x="222.88" y="-800.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">C</text>
-<polygon fill="none" stroke="#31507d" points="244.5,-792.5 244.5,-817.5 385.5,-817.5 385.5,-792.5 244.5,-792.5"/>
-<text text-anchor="start" x="279.75" y="-800.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">fw/test_accel.c</text>
-<polygon fill="none" stroke="#31507d" points="209.5,-767.5 209.5,-792.5 244.5,-792.5 244.5,-767.5 209.5,-767.5"/>
-<text text-anchor="start" x="216.12" y="-775.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Rust</text>
-<polygon fill="none" stroke="#31507d" points="244.5,-767.5 244.5,-792.5 385.5,-792.5 385.5,-767.5 244.5,-767.5"/>
-<text text-anchor="start" x="251.25" y="-775.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">fw&#45;rust/ (blindsig&#45;fw driver)</text>
-<polygon fill="none" stroke="#31507d" points="209.5,-742.5 209.5,-767.5 244.5,-767.5 244.5,-742.5 209.5,-742.5"/>
-<text text-anchor="start" x="216.88" y="-750.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Test</text>
-<polygon fill="none" stroke="#31507d" points="244.5,-742.5 244.5,-767.5 385.5,-767.5 385.5,-742.5 244.5,-742.5"/>
-<text text-anchor="start" x="281.25" y="-750.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">10² mod 7 = 2</text>
+<polygon fill="none" stroke="#2a3540" points="209.5,-792.5 209.5,-817.5 244.5,-817.5 244.5,-792.5 209.5,-792.5"/>
+<text text-anchor="start" x="222.88" y="-800.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">C</text>
+<polygon fill="none" stroke="#2a3540" points="244.5,-792.5 244.5,-817.5 385.5,-817.5 385.5,-792.5 244.5,-792.5"/>
+<text text-anchor="start" x="279.75" y="-800.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">fw/test_accel.c</text>
+<polygon fill="none" stroke="#2a3540" points="209.5,-767.5 209.5,-792.5 244.5,-792.5 244.5,-767.5 209.5,-767.5"/>
+<text text-anchor="start" x="216.12" y="-775.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Rust</text>
+<polygon fill="none" stroke="#2a3540" points="244.5,-767.5 244.5,-792.5 385.5,-792.5 385.5,-767.5 244.5,-767.5"/>
+<text text-anchor="start" x="251.25" y="-775.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">fw&#45;rust/ (blindsig&#45;fw driver)</text>
+<polygon fill="none" stroke="#2a3540" points="209.5,-742.5 209.5,-767.5 244.5,-767.5 244.5,-742.5 209.5,-742.5"/>
+<text text-anchor="start" x="216.88" y="-750.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Test</text>
+<polygon fill="none" stroke="#2a3540" points="244.5,-742.5 244.5,-767.5 385.5,-767.5 385.5,-742.5 244.5,-742.5"/>
+<text text-anchor="start" x="281.25" y="-750.05" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">10² mod 7 = 2</text>
 </g>
 <!-- cpu -->
 <g id="node2" class="node">
 <title>cpu</title>
 <polygon fill="#3a63b0" stroke="none" points="248.5,-654 248.5,-679 346.5,-679 346.5,-654 248.5,-654"/>
-<polygon fill="none" stroke="#31507d" points="248.5,-654 248.5,-679 346.5,-679 346.5,-654 248.5,-654"/>
+<polygon fill="none" stroke="#2a3540" points="248.5,-654 248.5,-679 346.5,-679 346.5,-654 248.5,-654"/>
 <text text-anchor="start" x="258.88" y="-662.55" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">PicoRV32 CPU</text>
-<polygon fill="none" stroke="#31507d" points="248.5,-629 248.5,-654 289.5,-654 289.5,-629 248.5,-629"/>
-<text text-anchor="start" x="260.38" y="-636.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">ISA</text>
-<polygon fill="none" stroke="#31507d" points="289.5,-629 289.5,-654 346.5,-654 346.5,-629 289.5,-629"/>
-<text text-anchor="start" x="306.38" y="-636.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">rv32i</text>
-<polygon fill="none" stroke="#31507d" points="248.5,-604 248.5,-629 289.5,-629 289.5,-604 248.5,-604"/>
-<text text-anchor="start" x="255.5" y="-611.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Clock</text>
-<polygon fill="none" stroke="#31507d" points="289.5,-604 289.5,-629 346.5,-629 346.5,-604 289.5,-604"/>
-<text text-anchor="start" x="296.25" y="-611.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">100 MHz</text>
-<polygon fill="none" stroke="#31507d" points="248.5,-582 248.5,-604 346.5,-604 346.5,-582 248.5,-582"/>
+<polygon fill="none" stroke="#2a3540" points="248.5,-629 248.5,-654 289.5,-654 289.5,-629 248.5,-629"/>
+<text text-anchor="start" x="260.38" y="-636.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">ISA</text>
+<polygon fill="none" stroke="#2a3540" points="289.5,-629 289.5,-654 346.5,-654 346.5,-629 289.5,-629"/>
+<text text-anchor="start" x="306.38" y="-636.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">rv32i</text>
+<polygon fill="none" stroke="#2a3540" points="248.5,-604 248.5,-629 289.5,-629 289.5,-604 248.5,-604"/>
+<text text-anchor="start" x="255.5" y="-611.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Clock</text>
+<polygon fill="none" stroke="#2a3540" points="289.5,-604 289.5,-629 346.5,-629 346.5,-604 289.5,-604"/>
+<text text-anchor="start" x="296.25" y="-611.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">100 MHz</text>
+<polygon fill="none" stroke="#2a3540" points="248.5,-582 248.5,-604 346.5,-604 346.5,-582 248.5,-582"/>
 <text text-anchor="start" x="275" y="-589.4" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#5f74a0">rtl/picorv32.v</text>
 </g>
 <!-- fw&#45;&gt;cpu -->
@@ -50,92 +50,92 @@
 <title>fw&#45;&gt;cpu</title>
 <path fill="none" stroke="#5f74a0" stroke-dasharray="5,2" d="M297.5,-738.67C297.5,-724.38 297.5,-708.78 297.5,-694.01"/>
 <polygon fill="#5f74a0" stroke="#5f74a0" points="301,-694.43 297.5,-684.43 294,-694.43 301,-694.43"/>
-<text text-anchor="middle" x="333.88" y="-711.95" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7"> &#160;loaded into RAM</text>
-<text text-anchor="middle" x="333.88" y="-702.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7"> &#160;at synthesis/sim</text>
+<text text-anchor="middle" x="333.88" y="-711.95" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86"> &#160;loaded into RAM</text>
+<text text-anchor="middle" x="333.88" y="-702.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86"> &#160;at synthesis/sim</text>
 </g>
 <!-- bus -->
 <g id="node3" class="node">
 <title>bus</title>
 <polygon fill="#4a5c73" stroke="none" points="226.5,-471.75 226.5,-496.75 368.5,-496.75 368.5,-471.75 226.5,-471.75"/>
-<polygon fill="none" stroke="#31507d" points="226.5,-471.75 226.5,-496.75 368.5,-496.75 368.5,-471.75 226.5,-471.75"/>
+<polygon fill="none" stroke="#2a3540" points="226.5,-471.75 226.5,-496.75 368.5,-496.75 368.5,-471.75 226.5,-471.75"/>
 <text text-anchor="start" x="252.12" y="-480.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">Address Decoder</text>
-<polygon fill="none" stroke="#31507d" points="226.5,-446.75 226.5,-471.75 270.5,-471.75 270.5,-446.75 226.5,-446.75"/>
-<text text-anchor="start" x="233.5" y="-454.3" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Select</text>
-<polygon fill="none" stroke="#31507d" points="270.5,-446.75 270.5,-471.75 368.5,-471.75 368.5,-446.75 270.5,-446.75"/>
-<text text-anchor="start" x="277.12" y="-454.3" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">mem_addr[31:28]</text>
-<polygon fill="none" stroke="#31507d" points="226.5,-424.75 226.5,-446.75 368.5,-446.75 368.5,-424.75 226.5,-424.75"/>
+<polygon fill="none" stroke="#2a3540" points="226.5,-446.75 226.5,-471.75 270.5,-471.75 270.5,-446.75 226.5,-446.75"/>
+<text text-anchor="start" x="233.5" y="-454.3" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Select</text>
+<polygon fill="none" stroke="#2a3540" points="270.5,-446.75 270.5,-471.75 368.5,-471.75 368.5,-446.75 270.5,-446.75"/>
+<text text-anchor="start" x="277.12" y="-454.3" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">mem_addr[31:28]</text>
+<polygon fill="none" stroke="#2a3540" points="226.5,-424.75 226.5,-446.75 368.5,-446.75 368.5,-424.75 226.5,-424.75"/>
 <text text-anchor="start" x="276.12" y="-432.15" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#5f74a0">rtl/soc_top.v</text>
 </g>
 <!-- cpu&#45;&gt;bus -->
 <g id="edge2" class="edge">
 <title>cpu&#45;&gt;bus</title>
-<path fill="none" stroke="#46618f" stroke-width="2" d="M297.5,-578.26C297.5,-557.79 297.5,-534.24 297.5,-513.7"/>
-<polygon fill="#46618f" stroke="#46618f" stroke-width="2" points="301,-513.73 297.5,-503.73 294,-513.73 301,-513.73"/>
-<text text-anchor="start" x="299.88" y="-549.45" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7">mem_valid / mem_ready</text>
-<text text-anchor="start" x="299.5" y="-535.7" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7">mem_addr / mem_wdata</text>
-<text text-anchor="start" x="299.88" y="-521.95" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7">mem_rdata / mem_wstrb</text>
+<path fill="none" stroke="#3a464e" stroke-width="2" d="M297.5,-578.26C297.5,-557.79 297.5,-534.24 297.5,-513.7"/>
+<polygon fill="#3a464e" stroke="#3a464e" stroke-width="2" points="301,-513.73 297.5,-503.73 294,-513.73 301,-513.73"/>
+<text text-anchor="start" x="299.88" y="-549.45" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86">mem_valid / mem_ready</text>
+<text text-anchor="start" x="299.5" y="-535.7" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86">mem_addr / mem_wdata</text>
+<text text-anchor="start" x="299.88" y="-521.95" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86">mem_rdata / mem_wstrb</text>
 </g>
 <!-- ram -->
 <g id="node4" class="node">
 <title>ram</title>
 <polygon fill="#2f8f5a" stroke="none" points="8,-346 8,-371 191,-371 191,-346 8,-346"/>
-<polygon fill="none" stroke="#31507d" points="8,-346 8,-371 191,-371 191,-346 8,-346"/>
+<polygon fill="none" stroke="#2a3540" points="8,-346 8,-371 191,-371 191,-346 8,-346"/>
 <text text-anchor="start" x="86.75" y="-354.55" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">RAM</text>
-<polygon fill="none" stroke="#31507d" points="8,-321 8,-346 65,-346 65,-321 8,-321"/>
-<text text-anchor="start" x="16.62" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Address</text>
-<polygon fill="none" stroke="#31507d" points="65,-321 65,-346 191,-346 191,-321 65,-321"/>
-<text text-anchor="start" x="95.38" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">0x0000_0000</text>
-<polygon fill="none" stroke="#31507d" points="8,-296 8,-321 65,-321 65,-296 8,-296"/>
-<text text-anchor="start" x="26" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Size</text>
-<polygon fill="none" stroke="#31507d" points="65,-296 65,-321 191,-321 191,-296 65,-296"/>
-<text text-anchor="start" x="113" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">16 KB</text>
-<polygon fill="none" stroke="#31507d" points="8,-271 8,-296 65,-296 65,-271 8,-271"/>
-<text text-anchor="start" x="14.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Contents</text>
-<polygon fill="none" stroke="#31507d" points="65,-271 65,-296 191,-296 191,-271 65,-271"/>
-<text text-anchor="start" x="71.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">firmware + data + stack</text>
+<polygon fill="none" stroke="#2a3540" points="8,-321 8,-346 65,-346 65,-321 8,-321"/>
+<text text-anchor="start" x="16.62" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Address</text>
+<polygon fill="none" stroke="#2a3540" points="65,-321 65,-346 191,-346 191,-321 65,-321"/>
+<text text-anchor="start" x="95.38" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">0x0000_0000</text>
+<polygon fill="none" stroke="#2a3540" points="8,-296 8,-321 65,-321 65,-296 8,-296"/>
+<text text-anchor="start" x="26" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Size</text>
+<polygon fill="none" stroke="#2a3540" points="65,-296 65,-321 191,-321 191,-296 65,-296"/>
+<text text-anchor="start" x="113" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">16 KB</text>
+<polygon fill="none" stroke="#2a3540" points="8,-271 8,-296 65,-296 65,-271 8,-271"/>
+<text text-anchor="start" x="14.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Contents</text>
+<polygon fill="none" stroke="#2a3540" points="65,-271 65,-296 191,-296 191,-271 65,-271"/>
+<text text-anchor="start" x="71.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">firmware + data + stack</text>
 </g>
 <!-- bus&#45;&gt;ram -->
 <g id="edge3" class="edge">
 <title>bus&#45;&gt;ram</title>
 <path fill="none" stroke="#2f8f5a" stroke-width="2" d="M241.56,-420.83C224.36,-408.87 205.02,-395.41 186.27,-382.37"/>
 <polygon fill="#2f8f5a" stroke="#2f8f5a" stroke-width="2" points="188.32,-379.53 178.11,-376.69 184.32,-385.28 188.32,-379.53"/>
-<text text-anchor="middle" x="227.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7"> &#160;0x0___</text>
+<text text-anchor="middle" x="227.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86"> &#160;0x0___</text>
 </g>
 <!-- simio -->
 <g id="node5" class="node">
 <title>simio</title>
 <polygon fill="#c8912f" stroke="none" points="225,-346 225,-371 370,-371 370,-346 225,-346"/>
-<polygon fill="none" stroke="#31507d" points="225,-346 225,-371 370,-371 370,-346 225,-346"/>
+<polygon fill="none" stroke="#2a3540" points="225,-346 225,-371 370,-371 370,-346 225,-346"/>
 <text text-anchor="start" x="278.75" y="-354.55" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">Sim I/O</text>
-<polygon fill="none" stroke="#31507d" points="225,-321 225,-346 291,-346 291,-321 225,-321"/>
-<text text-anchor="start" x="238.12" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Address</text>
-<polygon fill="none" stroke="#31507d" points="291,-321 291,-346 370,-346 370,-321 291,-321"/>
-<text text-anchor="start" x="297.88" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">0x1000_0000</text>
-<polygon fill="none" stroke="#31507d" points="225,-296 225,-321 291,-321 291,-296 225,-296"/>
-<text text-anchor="start" x="234" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Write byte</text>
-<polygon fill="none" stroke="#31507d" points="291,-296 291,-321 370,-321 370,-296 291,-296"/>
-<text text-anchor="start" x="308" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">print char</text>
-<polygon fill="none" stroke="#31507d" points="225,-271 225,-296 291,-296 291,-271 225,-271"/>
-<text text-anchor="start" x="231.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Write 0xFF</text>
-<polygon fill="none" stroke="#31507d" points="291,-271 291,-296 370,-296 370,-271 291,-271"/>
-<text text-anchor="start" x="312.12" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">halt sim</text>
+<polygon fill="none" stroke="#2a3540" points="225,-321 225,-346 291,-346 291,-321 225,-321"/>
+<text text-anchor="start" x="238.12" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Address</text>
+<polygon fill="none" stroke="#2a3540" points="291,-321 291,-346 370,-346 370,-321 291,-321"/>
+<text text-anchor="start" x="297.88" y="-328.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">0x1000_0000</text>
+<polygon fill="none" stroke="#2a3540" points="225,-296 225,-321 291,-321 291,-296 225,-296"/>
+<text text-anchor="start" x="234" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Write byte</text>
+<polygon fill="none" stroke="#2a3540" points="291,-296 291,-321 370,-321 370,-296 291,-296"/>
+<text text-anchor="start" x="308" y="-303.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">print char</text>
+<polygon fill="none" stroke="#2a3540" points="225,-271 225,-296 291,-296 291,-271 225,-271"/>
+<text text-anchor="start" x="231.75" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Write 0xFF</text>
+<polygon fill="none" stroke="#2a3540" points="291,-271 291,-296 370,-296 370,-271 291,-271"/>
+<text text-anchor="start" x="312.12" y="-278.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">halt sim</text>
 </g>
 <!-- bus&#45;&gt;simio -->
 <g id="edge4" class="edge">
 <title>bus&#45;&gt;simio</title>
 <path fill="none" stroke="#c8912f" stroke-width="2" d="M297.5,-421.01C297.5,-410.61 297.5,-399.05 297.5,-387.62"/>
 <polygon fill="#c8912f" stroke="#c8912f" stroke-width="2" points="301,-387.86 297.5,-377.86 294,-387.86 301,-387.86"/>
-<text text-anchor="middle" x="315.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7"> &#160;0x1___</text>
+<text text-anchor="middle" x="315.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86"> &#160;0x1___</text>
 </g>
 <!-- buswrap -->
 <g id="node6" class="node">
 <title>buswrap</title>
 <polygon fill="#7e5cbf" stroke="none" points="404,-332 404,-357 525,-357 525,-332 404,-332"/>
-<polygon fill="none" stroke="#31507d" points="404,-332 404,-357 525,-357 525,-332 404,-332"/>
+<polygon fill="none" stroke="#2a3540" points="404,-332 404,-357 525,-357 525,-332 404,-332"/>
 <text text-anchor="start" x="430.38" y="-340.55" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">Bus Wrapper</text>
-<polygon fill="none" stroke="#31507d" points="404,-307 404,-332 525,-332 525,-307 404,-307"/>
-<text text-anchor="start" x="410.88" y="-314.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">valid/ready ↔ wen/ren</text>
-<polygon fill="none" stroke="#31507d" points="404,-285 404,-307 525,-307 525,-285 404,-285"/>
+<polygon fill="none" stroke="#2a3540" points="404,-307 404,-332 525,-332 525,-307 404,-307"/>
+<text text-anchor="start" x="410.88" y="-314.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">valid/ready ↔ wen/ren</text>
+<polygon fill="none" stroke="#2a3540" points="404,-285 404,-307 525,-307 525,-285 404,-285"/>
 <text text-anchor="start" x="424" y="-292.4" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#5f74a0">rtl/blindsig_bus_wrap.v</text>
 </g>
 <!-- bus&#45;&gt;buswrap -->
@@ -143,43 +143,43 @@
 <title>bus&#45;&gt;buswrap</title>
 <path fill="none" stroke="#7e5cbf" stroke-width="2" d="M344.46,-421.01C364.03,-404.87 386.93,-385.98 407.45,-369.06"/>
 <polygon fill="#7e5cbf" stroke="#7e5cbf" stroke-width="2" points="409.49,-371.91 414.98,-362.85 405.03,-366.51 409.49,-371.91"/>
-<text text-anchor="middle" x="393.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#8ba3c7"> &#160;0x2___</text>
+<text text-anchor="middle" x="393.12" y="-394.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#6b7a86"> &#160;0x2___</text>
 </g>
 <!-- accel -->
 <g id="node7" class="node">
 <title>accel</title>
 <polygon fill="#c14a4a" stroke="none" points="365.5,-201 365.5,-226 563.5,-226 563.5,-201 365.5,-201"/>
-<polygon fill="none" stroke="#31507d" points="365.5,-201 365.5,-226 563.5,-226 563.5,-201 365.5,-201"/>
+<polygon fill="none" stroke="#2a3540" points="365.5,-201 365.5,-226 563.5,-226 563.5,-201 365.5,-201"/>
 <text text-anchor="start" x="410.5" y="-209.55" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#ffffff">BlindSig Accelerator</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-176 365.5,-201 433.5,-201 433.5,-176 365.5,-176"/>
-<text text-anchor="start" x="379.62" y="-183.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Address</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-176 433.5,-201 563.5,-201 563.5,-176 433.5,-176"/>
-<text text-anchor="start" x="465.88" y="-183.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">0x2000_0000</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-151 365.5,-176 433.5,-176 433.5,-151 365.5,-151"/>
-<text text-anchor="start" x="385.62" y="-158.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">CTRL</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-151 433.5,-176 563.5,-176 563.5,-151 433.5,-151"/>
-<text text-anchor="start" x="442.62" y="-158.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">+0x00 (start/reset/load)</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-126 365.5,-151 433.5,-151 433.5,-126 365.5,-126"/>
-<text text-anchor="start" x="379.25" y="-133.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">STATUS</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-126 433.5,-151 563.5,-151 563.5,-126 433.5,-126"/>
-<text text-anchor="start" x="440.38" y="-133.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">+0x04 (busy/done/error)</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-101 365.5,-126 433.5,-126 433.5,-101 365.5,-101"/>
-<text text-anchor="start" x="372.12" y="-108.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">OPERAND</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-101 433.5,-126 563.5,-126 563.5,-101 433.5,-101"/>
-<text text-anchor="start" x="483.5" y="-108.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">+0x08</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-76 365.5,-101 433.5,-101 433.5,-76 365.5,-76"/>
-<text text-anchor="start" x="378.5" y="-83.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">RESULT</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-76 433.5,-101 563.5,-101 563.5,-76 433.5,-76"/>
-<text text-anchor="start" x="482.38" y="-83.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">+0x0C</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-51 365.5,-76 433.5,-76 433.5,-51 365.5,-51"/>
-<text text-anchor="start" x="372.12" y="-58.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">MODULUS</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-51 433.5,-76 563.5,-76 563.5,-51 433.5,-51"/>
-<text text-anchor="start" x="483.5" y="-58.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">+0x10</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-26 365.5,-51 433.5,-51 433.5,-26 365.5,-26"/>
-<text text-anchor="start" x="375.88" y="-33.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">Operation</text>
-<polygon fill="none" stroke="#31507d" points="433.5,-26 433.5,-51 563.5,-51 563.5,-26 433.5,-26"/>
-<text text-anchor="start" x="472.62" y="-33.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#c7d5ea">op² mod m</text>
-<polygon fill="none" stroke="#31507d" points="365.5,-4 365.5,-26 563.5,-26 563.5,-4 365.5,-4"/>
+<polygon fill="none" stroke="#2a3540" points="365.5,-176 365.5,-201 433.5,-201 433.5,-176 365.5,-176"/>
+<text text-anchor="start" x="379.62" y="-183.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Address</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-176 433.5,-201 563.5,-201 563.5,-176 433.5,-176"/>
+<text text-anchor="start" x="465.88" y="-183.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">0x2000_0000</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-151 365.5,-176 433.5,-176 433.5,-151 365.5,-151"/>
+<text text-anchor="start" x="385.62" y="-158.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">CTRL</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-151 433.5,-176 563.5,-176 563.5,-151 433.5,-151"/>
+<text text-anchor="start" x="442.62" y="-158.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">+0x00 (start/reset/load)</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-126 365.5,-151 433.5,-151 433.5,-126 365.5,-126"/>
+<text text-anchor="start" x="379.25" y="-133.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">STATUS</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-126 433.5,-151 563.5,-151 563.5,-126 433.5,-126"/>
+<text text-anchor="start" x="440.38" y="-133.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">+0x04 (busy/done/error)</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-101 365.5,-126 433.5,-126 433.5,-101 365.5,-101"/>
+<text text-anchor="start" x="372.12" y="-108.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">OPERAND</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-101 433.5,-126 563.5,-126 563.5,-101 433.5,-101"/>
+<text text-anchor="start" x="483.5" y="-108.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">+0x08</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-76 365.5,-101 433.5,-101 433.5,-76 365.5,-76"/>
+<text text-anchor="start" x="378.5" y="-83.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">RESULT</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-76 433.5,-101 563.5,-101 563.5,-76 433.5,-76"/>
+<text text-anchor="start" x="482.38" y="-83.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">+0x0C</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-51 365.5,-76 433.5,-76 433.5,-51 365.5,-51"/>
+<text text-anchor="start" x="372.12" y="-58.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">MODULUS</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-51 433.5,-76 563.5,-76 563.5,-51 433.5,-51"/>
+<text text-anchor="start" x="483.5" y="-58.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">+0x10</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-26 365.5,-51 433.5,-51 433.5,-26 365.5,-26"/>
+<text text-anchor="start" x="375.88" y="-33.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">Operation</text>
+<polygon fill="none" stroke="#2a3540" points="433.5,-26 433.5,-51 563.5,-51 563.5,-26 433.5,-26"/>
+<text text-anchor="start" x="472.62" y="-33.55" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#b8c5d0">op² mod m</text>
+<polygon fill="none" stroke="#2a3540" points="365.5,-4 365.5,-26 563.5,-26 563.5,-4 365.5,-4"/>
 <text text-anchor="start" x="413.5" y="-11.4" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#5f74a0">blindsig&#45;rtl/rtl/blindsig_accel.v</text>
 </g>
 <!-- buswrap&#45;&gt;accel -->
