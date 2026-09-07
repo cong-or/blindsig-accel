@@ -1,5 +1,10 @@
 // mulmod.v — constant-time bit-serial modular multiplier
 //
+// In plain terms: multiply two numbers and wrap the answer around a limit m
+// (the "modulus") — the core operation behind RSA, Diffie-Hellman and elliptic
+// curves. It takes the same number of clock cycles no matter the inputs, so it
+// can't leak secret values through how long it runs.
+//
 // result = (a * b) mod m, processing one bit of b per clock, MSB first,
 // using the classic shift/add-and-reduce recurrence:
 //

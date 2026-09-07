@@ -1,5 +1,10 @@
 // soc_top.v — PicoRV32 SoC with blind signature accelerator
 //
+// In plain terms: a tiny whole computer on a chip — a RISC-V CPU, 16 KB of
+// memory, a "print to the console" port for the simulator, and our crypto
+// accelerator — all sharing one memory bus. Each device answers to a different
+// range of addresses (below).
+//
 // Memory map:
 //   0x0000_0000 – 0x0000_3FFF  RAM (16 KB, 4096 words)
 //   0x1000_0000                 Sim I/O (write byte = print, write 0xFF = halt)

@@ -1,5 +1,9 @@
 // blindsig_bus_wrap.v — PicoRV32 bus → blindsig_accel adapter
 //
+// In plain terms: a small translator so the CPU's memory bus can talk to the
+// accelerator — it turns the CPU's read/write handshake into the simple
+// enable pulses the accelerator expects, and reports back when the access is done.
+//
 // Translates the PicoRV32 valid/ready handshake into single-cycle
 // wen/ren pulses for the accelerator, then asserts ready one cycle later.
 

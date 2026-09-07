@@ -1,5 +1,9 @@
 // redmod.v — constant-time bit-serial modular reduction
 //
+// In plain terms: take a number x and find its remainder after dividing by m
+// (that's "x mod m"). Used to shrink an operand into range before multiplying.
+// Like mulmod, it runs in a fixed number of cycles regardless of the values.
+//
 // result = x mod m, processing one bit of x per clock, MSB first:
 //
 //     r = 0

@@ -1,3 +1,15 @@
+//! Bare-metal (`no_std`) driver for the blind-signature accelerator.
+//!
+//! In plain terms: a tiny Rust library that talks to the accelerator hardware
+//! over its memory-mapped registers. Point it at the accelerator's address,
+//! then reset → load the modulus → load the operand → start → read the result
+//! (or just call [`BlindSigAccel::compute`]). Every access is a volatile
+//! read/write, so the compiler never caches or reorders these hardware pokes.
+//!
+//! ```ignore
+//! let accel = BlindSigAccel::new(0x2000_0000);
+//! let result = accel.compute(&[7], &[10])?; // 10^2 mod 7 = 2
+//! ```
 #![no_std]
 
 use core::ptr;
@@ -81,8 +93,6 @@ impl BlindSigAccel {
 
     pub fn compute(&self, modulus: &[u32], operand: &[u32]) -> Result<u32, ()> {
         self.reset();
-
-
         self.load_modulus(modulus);
         self.load_operand(operand);
         self.start();

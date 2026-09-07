@@ -1,5 +1,10 @@
 // blindsig_accel.v — MMIO blind signature accelerator peripheral
 //
+// In plain terms: a small hardware block the CPU drives through a few
+// memory-mapped registers. Write in an operand and a modulus, set the START
+// bit, then read back (operand^2 mod modulus). The CPU's own instructions never
+// do this maths — this block does, in fixed time.
+//
 // Register map (matches firmware driver in blindsig-fw/src/lib.rs):
 //   0x00  CTRL     W   [0] START  [1] RESET  [2] LOAD_OP  [3] LOAD_MOD
 //   0x04  STATUS   R   [0] BUSY   [1] DONE   [2] ERROR
