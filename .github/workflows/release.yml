@@ -21,8 +21,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           git tag -l --format='%(contents)' "$GITHUB_REF_NAME" > /tmp/notes.md
-          echo "----- release notes -----"; cat /tmp/notes.md; echo "-------------------------"
-          gh release create "$GITHUB_REF_NAME" \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "$GITHUB_REF_NAME — feasibility prototype" \
-            --notes-file /tmp/notes.md
+          title="$GITHUB_REF_NAME — feasibility prototype"
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$title" --notes-file /tmp/notes.md \
+            || gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$title" --notes-file /tmp/notes.md
