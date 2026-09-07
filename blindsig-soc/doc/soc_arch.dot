@@ -1,145 +1,92 @@
-// blindsig-soc architecture diagram
+// blindsig-soc architecture diagram (blueprint theme)
 // Generate: dot -Tsvg soc_arch.dot -o soc_arch.svg
+//           dot -Tpng -Gdpi=140 soc_arch.dot -o soc_arch.png
 
 digraph soc {
     rankdir=TB;
-    bgcolor="white";
+    bgcolor="#0b1122";
     fontname="Helvetica";
-    node [fontname="Helvetica", fontsize=11];
-    edge [fontname="Helvetica", fontsize=9];
-
-    // ── CPU ──
-    cpu [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#4a90d9" COLSPAN="2"><FONT COLOR="white"><B>PicoRV32 CPU</B></FONT></TD></TR>
-                <TR><TD>ISA</TD><TD>rv32i</TD></TR>
-                <TR><TD>Clock</TD><TD>100 MHz</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
-
-    // ── Bus ──
-    bus [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#7b8d8e" COLSPAN="2"><FONT COLOR="white"><B>Address Decoder</B></FONT></TD></TR>
-                <TR><TD>Select</TD><TD>mem_addr[31:28]</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
-
-    // ── RAM ──
-    ram [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#50a050" COLSPAN="2"><FONT COLOR="white"><B>RAM</B></FONT></TD></TR>
-                <TR><TD>Address</TD><TD>0x0000_0000</TD></TR>
-                <TR><TD>Size</TD><TD>16 KB</TD></TR>
-                <TR><TD>Contents</TD><TD>firmware + data + stack</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
-
-    // ── Sim I/O ──
-    simio [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#d4a84b" COLSPAN="2"><FONT COLOR="white"><B>Sim I/O</B></FONT></TD></TR>
-                <TR><TD>Address</TD><TD>0x1000_0000</TD></TR>
-                <TR><TD>Write byte</TD><TD>print char</TD></TR>
-                <TR><TD>Write 0xFF</TD><TD>halt sim</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
-
-    // ── Bus Wrapper ──
-    buswrap [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#8e6bbf" COLSPAN="2"><FONT COLOR="white"><B>Bus Wrapper</B></FONT></TD></TR>
-                <TR><TD COLSPAN="2">valid/ready ↔ wen/ren</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
-
-    // ── Accelerator ──
-    accel [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#d94a4a" COLSPAN="2"><FONT COLOR="white"><B>BlindSig Accelerator</B></FONT></TD></TR>
-                <TR><TD>Address</TD><TD>0x2000_0000</TD></TR>
-                <TR><TD>CTRL</TD><TD>+0x00 (start/reset/load)</TD></TR>
-                <TR><TD>STATUS</TD><TD>+0x04 (busy/done/error)</TD></TR>
-                <TR><TD>OPERAND</TD><TD>+0x08</TD></TR>
-                <TR><TD>RESULT</TD><TD>+0x0C</TD></TR>
-                <TR><TD>MODULUS</TD><TD>+0x10</TD></TR>
-                <TR><TD>Operation</TD><TD>op² mod m</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
+    node [fontname="Helvetica", fontsize=11, fontcolor="#c7d5ea", shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9, color="#46618f", fontcolor="#8ba3c7"];
 
     // ── Firmware ──
-    fw [
-        label=<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
-                <TR><TD BGCOLOR="#2c3e50" COLSPAN="2"><FONT COLOR="white"><B>Firmware</B></FONT></TD></TR>
-                <TR><TD>C</TD><TD>fw/test_accel.c</TD></TR>
-                <TR><TD>Rust</TD><TD>fw-rust/ (uses blindsig-fw driver)</TD></TR>
-                <TR><TD>Test</TD><TD>10² mod 7 = 2</TD></TR>
-            </TABLE>
-        >,
-        shape=plaintext
-    ];
+    fw [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#26364e" COLSPAN="2"><FONT COLOR="#ffffff"><B>Firmware</B></FONT></TD></TR>
+            <TR><TD>C</TD><TD>fw/test_accel.c</TD></TR>
+            <TR><TD>Rust</TD><TD>fw-rust/ (blindsig-fw driver)</TD></TR>
+            <TR><TD>Test</TD><TD>10² mod 7 = 2</TD></TR>
+        </TABLE>>];
 
-    // ── Edges ──
-    fw -> cpu [label="  loaded into RAM\n  at synthesis/sim", style=dashed, color="#666666"];
+    // ── CPU ──
+    cpu [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#3a63b0" COLSPAN="2"><FONT COLOR="#ffffff"><B>PicoRV32 CPU</B></FONT></TD></TR>
+            <TR><TD>ISA</TD><TD>rv32i</TD></TR>
+            <TR><TD>Clock</TD><TD>100 MHz</TD></TR>
+            <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">rtl/picorv32.v</FONT></TD></TR>
+        </TABLE>>];
 
-    cpu -> bus [
-        label=<
-            <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2">
-                <TR><TD>mem_valid / mem_ready</TD></TR>
-                <TR><TD>mem_addr / mem_wdata</TD></TR>
-                <TR><TD>mem_rdata / mem_wstrb</TD></TR>
-            </TABLE>
-        >,
-        penwidth=2
-    ];
+    // ── Address Decoder ──
+    bus [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#4a5c73" COLSPAN="2"><FONT COLOR="#ffffff"><B>Address Decoder</B></FONT></TD></TR>
+            <TR><TD>Select</TD><TD>mem_addr[31:28]</TD></TR>
+            <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">rtl/soc_top.v</FONT></TD></TR>
+        </TABLE>>];
 
-    bus -> ram    [label="  0x0___", penwidth=2, color="#50a050"];
-    bus -> simio  [label="  0x1___", penwidth=2, color="#d4a84b"];
-    bus -> buswrap [label="  0x2___", penwidth=2, color="#8e6bbf"];
-    buswrap -> accel [penwidth=2, color="#d94a4a"];
+    // ── RAM ──
+    ram [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#2f8f5a" COLSPAN="2"><FONT COLOR="#ffffff"><B>RAM</B></FONT></TD></TR>
+            <TR><TD>Address</TD><TD>0x0000_0000</TD></TR>
+            <TR><TD>Size</TD><TD>16 KB</TD></TR>
+            <TR><TD>Contents</TD><TD>firmware + data + stack</TD></TR>
+        </TABLE>>];
 
-    // ── Source files ──
-    subgraph cluster_files {
-        label=<<B>Source Files</B>>;
-        labeljust=l;
-        style=dashed;
-        color="#aaaaaa";
-        fontname="Helvetica";
-        fontsize=10;
-        node [shape=note, fontsize=9, style=filled, fillcolor="#f5f5f5"];
+    // ── Sim I/O ──
+    simio [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#c8912f" COLSPAN="2"><FONT COLOR="#ffffff"><B>Sim I/O</B></FONT></TD></TR>
+            <TR><TD>Address</TD><TD>0x1000_0000</TD></TR>
+            <TR><TD>Write byte</TD><TD>print char</TD></TR>
+            <TR><TD>Write 0xFF</TD><TD>halt sim</TD></TR>
+        </TABLE>>];
 
-        f_soc [label="rtl/soc_top.v"];
-        f_wrap [label="rtl/blindsig_bus_wrap.v"];
-        f_accel [label="blindsig-rtl/rtl/\nblindsig_accel.v"];
-        f_pico [label="rtl/picorv32.v"];
-        f_tb [label="tb/tb_soc.v"];
-    }
+    // ── Bus Wrapper ──
+    buswrap [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#7e5cbf" COLSPAN="2"><FONT COLOR="#ffffff"><B>Bus Wrapper</B></FONT></TD></TR>
+            <TR><TD COLSPAN="2">valid/ready ↔ wen/ren</TD></TR>
+            <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">rtl/blindsig_bus_wrap.v</FONT></TD></TR>
+        </TABLE>>];
 
-    // Map files to blocks
-    edge [style=dotted, color="#bbbbbb", arrowhead=none, constraint=false];
-    f_pico -> cpu;
-    f_soc -> bus;
-    f_soc -> ram;
-    f_soc -> simio;
-    f_wrap -> buswrap;
-    f_accel -> accel;
+    // ── Accelerator ──
+    accel [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#31507d">
+            <TR><TD BGCOLOR="#c14a4a" COLSPAN="2"><FONT COLOR="#ffffff"><B>BlindSig Accelerator</B></FONT></TD></TR>
+            <TR><TD>Address</TD><TD>0x2000_0000</TD></TR>
+            <TR><TD>CTRL</TD><TD>+0x00 (start/reset/load)</TD></TR>
+            <TR><TD>STATUS</TD><TD>+0x04 (busy/done/error)</TD></TR>
+            <TR><TD>OPERAND</TD><TD>+0x08</TD></TR>
+            <TR><TD>RESULT</TD><TD>+0x0C</TD></TR>
+            <TR><TD>MODULUS</TD><TD>+0x10</TD></TR>
+            <TR><TD>Operation</TD><TD>op² mod m</TD></TR>
+            <TR><TD COLSPAN="2"><FONT COLOR="#5f74a0" POINT-SIZE="8">blindsig-rtl/rtl/blindsig_accel.v</FONT></TD></TR>
+        </TABLE>>];
+
+    // ── Dataflow ──
+    fw -> cpu [label="  loaded into RAM\n  at synthesis/sim", style=dashed, color="#5f74a0"];
+
+    cpu -> bus [label=<
+        <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD><FONT COLOR="#8ba3c7">mem_valid / mem_ready</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#8ba3c7">mem_addr / mem_wdata</FONT></TD></TR>
+            <TR><TD><FONT COLOR="#8ba3c7">mem_rdata / mem_wstrb</FONT></TD></TR>
+        </TABLE>>, penwidth=2];
+
+    bus -> ram     [label="  0x0___", penwidth=2, color="#2f8f5a"];
+    bus -> simio   [label="  0x1___", penwidth=2, color="#c8912f"];
+    bus -> buswrap [label="  0x2___", penwidth=2, color="#7e5cbf"];
+    buswrap -> accel [penwidth=2, color="#c14a4a"];
 }
