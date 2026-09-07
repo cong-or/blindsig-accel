@@ -40,6 +40,20 @@ The register interface, the `mulmod`/`redmod` primitives, the formal harness, an
 integration all carry over directly: the funded work builds on this foundation, it doesn't
 restart from it.
 
+## Why this matters
+
+Using a crypto accelerator today usually means trusting a vendor's closed IP, compiled by a
+closed toolchain — you take the security on faith. The lasting output of this project is not
+one accelerator but a **reproducible pipeline for trustworthy crypto hardware**:
+constant-time-by-construction RTL, formally verified with an open prover, cross-checked
+against a software reference, synthesised end-to-end with a fully open flow, and re-verified
+in CI — so the security properties travel with the code as machine-checked proofs anyone can
+re-run. Blind signatures are the first primitive built this way; the same pipeline
+generalises to the modular-arithmetic, elliptic-curve, and post-quantum primitives the
+ecosystem needs next. And because the whole path from source to bitstream is open and
+reproducible, the components are auditable — the openness that enables the verification is
+also the supply-chain-integrity story, with no proprietary black box between design and gate.
+
 ## Layout
 
 The three components are independently useful and each has its own README:
