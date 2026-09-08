@@ -98,6 +98,14 @@ be reused without a hand audit. Without them, reuse means taking the design on t
 checked into the repo and re-run on your machine, so a user does not have to take the author's word. This
 project is a working instance of that approach for open cryptographic hardware.
 
+## Development
+
+This project uses AI coding assistants (Claude) for documentation and the in-browser demo. The RTL, the
+SoC integration, and the formal-verification harness are written by hand. I take responsibility for all
+delivered code and can explain each decision; correctness does not depend on who wrote a line: every
+result is cross-checked in simulation against an independent software reference, and the core arithmetic
+is machine-checked with SymbiYosys.
+
 ## Licensing
 
 - **Hardware** — Verilog RTL, under [CERN-OHL-P-2.0](blindsig-rtl/LICENSE).
