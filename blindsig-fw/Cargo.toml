@@ -2,5 +2,8 @@
 name = "blindsig-fw"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Bare-metal (no_std) MMIO driver for the blind-signature accelerator on RISC-V."
+repository = "https://github.com/cong-or/blindsig-accel"
 
 [dependencies]
