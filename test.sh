@@ -10,6 +10,9 @@
 
 set -e
 
+# resolve the repo root from this script's location, so the suite runs from any clone path
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 BOLD="\033[1m"
 DIM="\033[2m"
 GREEN="\033[32m"
@@ -100,7 +103,7 @@ echo -e "    every multiplication must complete in the ${BOLD}same${RESET} numbe
 echo -e "    evidence of the constant-time property"
 echo ""
 
-cd /home/soze/blindsig/blindsig-rtl
+cd "$ROOT/blindsig-rtl"
 make clean > /dev/null 2>&1 || true
 
 echo -e "  ${DIM}\$ iverilog -o mulmod_tb tb/tb_mulmod.v rtl/mulmod.v${RESET}"
@@ -189,7 +192,7 @@ pause
 narrate "Building C firmware..." \
     "riscv-none-elf-gcc → objcopy → makehex.py → firmware.hex"
 
-cd /home/soze/blindsig/blindsig-soc
+cd "$ROOT/blindsig-soc"
 make -C fw clean > /dev/null 2>&1 || true
 
 make -C fw 2>&1 | while IFS= read -r line; do
