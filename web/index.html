@@ -39,6 +39,8 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 
 <h2 class="section-head" id="circuit">the movement, behind glass — a live simulation</h2>
 
+<p class="scope"><b>Scope.</b> This is <span class="mono hl">mulmod</span> — the core modular multiplier, one building block. The blind-signature operations (blind RSA, blind Schnorr) and full RSA-2048/3072 widths are the <b>funded work</b>, not shown here. See the <a href="https://github.com/cong-or/blindsig-accel/blob/main/ROADMAP.md">roadmap</a>.</p>
+
 <div class="instrument">
   <div class="prov">
     <span class="prov-src"><span class="mono">mulmod.v</span> → Verilator → WebAssembly · a live simulation of the real RTL</span>
@@ -91,8 +93,10 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 
   <rect x="256" y="436" width="384" height="40" rx="20" fill="#0d1513" stroke="#4fd1c5" stroke-width="1.2"/>
   <circle cx="282" cy="456" r="5" fill="#4fd1c5" filter="url(#glowA)"/><text x="300" y="461" class="kick" fill="#a9e6e0">33 CYCLES · ANY OPERANDS · NO BRANCHES</text>
+  <a href="https://github.com/cong-or/blindsig-accel/tree/main/blindsig-rtl/formal" target="_blank">
   <rect x="656" y="436" width="300" height="40" rx="20" fill="#0d1513" stroke="#2c7a7b" stroke-width="1.1"/>
-  <text x="678" y="461" class="kick" fill="#4fd1c5">★ FORMALLY VERIFIED · SYMBIYOSYS</text>
+  <text x="678" y="461" class="kick" fill="#4fd1c5">★ FORMALLY VERIFIED · SYMBIYOSYS ↗</text>
+  </a>
 
   <!-- forward pipeline -->
   <g fill="none" stroke="#3a464e" stroke-width="1.6" marker-end="url(#arr)">
@@ -113,6 +117,14 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 </svg>
   </div>
 
+  <p class="legend">Each clock the same few gears turn — <b>double</b> the accumulator, <b>subtract m</b> if it overflowed, <b>add a</b> when this bit of <span class="mono">b</span> is 1, subtract m again. No step branches on a secret, so every multiply takes the <b>same 33 clocks</b>.</p>
+
+  <div class="internals">
+    <div class="ind-label">b · MSB-first, one bit consumed per clock · live from the circuit's shift register</div>
+    <div id="breg" class="bits"></div>
+    <div class="internals-foot"><span class="ind-label">accumulator</span> <span id="acchex" class="mono">0x00000000</span> <span class="dim">· stays &lt; m at every step (proven)</span></div>
+  </div>
+
   <div class="annun">
     <div class="ind"><span class="ind-label">State</span><span id="state" class="ind-state stby">STANDBY</span></div>
     <div class="ind ind-grow"><span class="ind-label">Sequence · 33 cycles</span><div class="prog"><i id="prog"></i></div></div>
@@ -130,6 +142,20 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
   </div>
   <div id="status" class="status">loading <span class="mono">mulmod.v</span> …</div>
   <div class="ct-log-wrap"><span class="ind-label">Constant-time log</span><div id="ctlog" class="ct-log"></div></div>
+
+  <div class="prove-wrap">
+    <div class="prove-head">
+      <span class="ind-label">Constant-time proof · wildly different inputs, identical timing</span>
+      <button id="btn_prove" class="btn">Prove it ▸</button>
+    </div>
+    <div id="prove" class="prove"></div>
+    <div class="contrast">
+      <div class="ind-label">why it matters — schematic, not a measurement</div>
+      <div class="crow"><span class="clab">branchy software · adds only on 1-bits</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
+      <div class="crow"><span class="clab mono">mulmod · this circuit</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
+      <p class="note">A mod-mul that branches per bit finishes sooner when <span class="mono">b</span> has fewer 1-bits — that variation is the leak. This circuit does identical work every clock, so its runtime reveals nothing about the operands. (The upper bar is a schematic of the classic software behaviour, not a benchmark of any particular CPU.)</p>
+    </div>
+  </div>
 </div>
 
 <p class="note">Any inputs land on the same 33 cycles. Each result is checked against

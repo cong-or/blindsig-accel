@@ -10,6 +10,8 @@
   let sim = null;
   let timer = null;
   let inA = 0, inB = 0, inM = 7;
+  let hasBreg = false;
+  let bitCells = [];
 
   const stages = ["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"];
 
@@ -42,6 +44,92 @@
 
   function u32(x) { return (x >>> 0); }
   function bigMulMod(a, b, m) { return Number((BigInt(u32(a)) * BigInt(u32(b))) % BigInt(u32(m))); }
+  function popcount(x) { x >>>= 0; let c = 0; while (x) { c += x & 1; x >>>= 1; } return c; }
+  function hex32(x) { return "0x" + u32(x).toString(16).padStart(8, "0").toUpperCase(); }
+
+  // --- b shift register, drawn live from the circuit (not re-derived in JS) ---
+  function buildBits() {
+    const box = $("breg"); if (!box) return;
+    box.innerHTML = ""; bitCells = [];
+    for (let i = 0; i < 32; i++) {
+      const s = document.createElement("span");
+      s.className = "bit"; s.textContent = "0";
+      box.appendChild(s); bitCells.push(s);
+    }
+  }
+  function renderBits(v) {
+    if (!bitCells.length) return;
+    v >>>= 0;
+    for (let i = 0; i < 32; i++) {
+      const bit = (v >>> (31 - i)) & 1;   // i = 0 is the MSB — the active bit
+      const c = bitCells[i];
+      c.textContent = String(bit);
+      c.className = "bit" + (bit ? " one" : "") + (i === 0 ? " act" : "");
+    }
+  }
+  function updateAcc() {
+    const e = $("acchex"); if (e && sim) e.textContent = hex32(sim.acc());
+  }
+
+  // --- schematic timing contrast (NOT a benchmark): a branch-per-bit software
+  //     mod-mul does an add only on set bits, so its work tracks popcount(b);
+  //     this fixed circuit does not. Illustrates the leak the datapath removes. ---
+  function updateContrast(b) {
+    const pc = popcount(b);
+    const cpu = $("bar_cpu"), steps = $("cpu_steps"), hw = $("bar_hw");
+    if (cpu) cpu.style.width = (pc / 32 * 100) + "%";
+    if (steps) steps.textContent = pc + (pc === 1 ? " add" : " adds");
+    if (hw) hw.style.width = "100%";
+  }
+
+  // --- constant-time proof: run four very different inputs to completion and
+  //     show they all land on the same cycle. The real circuit runs each one. ---
+  function prove() {
+    if (!sim) return;
+    stop();
+    const m = readInputs().m;
+    const a = u32(m - 1);                 // a < m — the multiplier's precondition
+    const cases = [
+      { lab: "b = 0 · no 1-bits",       b: 0 },
+      { lab: "b = 0xFFFFFFFF · all 1s", b: 0xFFFFFFFF },
+      { lab: "b = 0xDEADBEEF",          b: 0xDEADBEEF },
+      { lab: "b = m − 1",               b: u32(m - 1) },
+    ];
+    const box = $("prove"); if (!box) return;
+    box.innerHTML = "";
+    let refCyc = null, allSame = true, allOk = true;
+    cases.forEach((c) => {
+      sim.reset(); sim.load(a, c.b, m);
+      let guard = 0; while (!sim.step() && guard++ < 100) {}
+      const cyc = sim.cycles(), res = u32(sim.result());
+      const ok = res === bigMulMod(a, c.b, m);
+      if (refCyc === null) refCyc = cyc; else if (cyc !== refCyc) allSame = false;
+      if (!ok) allOk = false;
+      const row = document.createElement("div");
+      row.className = "prow";
+      row.innerHTML =
+        '<span class="plab">' + c.lab + "</span>" +
+        '<span class="pres">&rarr; ' + res + (ok ? "" : " ✗") + "</span>" +
+        '<span class="pbar"><i style="width:' + (Math.min(cyc, 33) / 33 * 100) + '%"></i></span>' +
+        '<span class="pcyc">' + cyc + " cyc</span>";
+      box.appendChild(row);
+    });
+    const v = document.createElement("div");
+    v.className = "prove-verdict" + (allOk && allSame ? "" : " bad");
+    v.textContent = allOk
+      ? (allSame
+          ? "✓ all four finish on cycle " + refCyc + " — the timing is independent of the operands"
+          : "⚠ timing differed across inputs — see cycle counts above")
+      : "✗ a result disagreed with the reference";
+    box.appendChild(v);
+    // leave the live panel primed for a fresh Run
+    const { a: la, b: lb, m: lm } = readInputs();
+    inA = la; inB = lb; inM = lm;
+    sim.reset(); sim.load(la, lb, lm);
+    if (hasBreg) renderBits(lb);
+    updateAcc(); updateContrast(lb);
+    setState("READY", "stby");
+  }
 
   function readInputs() {
     const pa = u32(parseInt($("in_a").value || "0", 10));
@@ -90,6 +178,8 @@
     const { a, b, m } = readInputs();
     inA = a; inB = b; inM = m;
     sim.reset(); sim.load(a, b, m);
+    updateContrast(b);
+    if (hasBreg) renderBits(b);
     arm();
     setRunning(true);
     timer = setInterval(() => {
@@ -98,6 +188,8 @@
       const cyc = sim.cycles();
       $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
       $("accv").textContent = String(u32(sim.acc()));
+      if (hasBreg) renderBits(sim.breg());
+      updateAcc();
       setProg(cyc);
       showActive(cyc, bit);
       pulseAcc();
@@ -109,13 +201,15 @@
     if (!sim) return;
     if (!timer && (sim.cycles() === 0 || sim.cycles() >= 33)) {
       const { a, b, m } = readInputs(); inA = a; inB = b; inM = m;
-      sim.reset(); sim.load(a, b, m); arm(); setRunning(true, true);
+      sim.reset(); sim.load(a, b, m); updateContrast(b); if (hasBreg) renderBits(b); arm(); setRunning(true, true);
     }
     const bit = sim.bbit();
     const done = sim.step();
     const cyc = sim.cycles();
     $("cyc").textContent = String(cyc).padStart(2, "0") + " / 33";
     $("accv").textContent = String(u32(sim.acc()));
+    if (hasBreg) renderBits(sim.breg());
+    updateAcc();
     setProg(cyc);
     showActive(cyc, bit);
     pulseAcc();
@@ -128,6 +222,7 @@
   }
 
   function boot(Module) {
+    hasBreg = (typeof Module._sim_breg === "function");
     sim = {
       reset:  Module.cwrap("sim_reset", null, []),
       load:   Module.cwrap("sim_load", null, ["number", "number", "number"]),
@@ -136,11 +231,16 @@
       cycles: Module.cwrap("sim_cycles", "number", []),
       acc:    Module.cwrap("sim_acc", "number", []),
       bbit:   Module.cwrap("sim_bbit", "number", []),
+      breg:   hasBreg ? Module.cwrap("sim_breg", "number", []) : null,
     };
+    if (hasBreg) buildBits();
+    else { const el = document.querySelector(".internals"); if (el) el.style.display = "none"; }
     $("btn_run").addEventListener("click", run);
     $("btn_step").addEventListener("click", stepOne);
+    const bp = $("btn_prove"); if (bp) bp.addEventListener("click", prove);
     ["in_a", "in_b", "in_m"].forEach((id) =>
       $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") run(); }));
+    updateContrast(u32(parseInt($("in_b").value || "0", 10)));
     $("status").innerHTML = 'ready · the real <span class="mono">mulmod.v</span> is loaded';
     setState("READY", "stby");
     run(); // show it working immediately

@@ -72,6 +72,11 @@ uint32_t sim_acc() { return (uint32_t)g_top->rootp->mulmod__DOT__acc; }
 // this drives the animation from the circuit itself, not from a JS re-derivation.
 int sim_bbit() { return (int)((g_top->rootp->mulmod__DOT__b_reg >> 31) & 1u); }
 
+// The whole b_reg shift register, live from the circuit. Its bits march left one
+// position per clock (the MSB is the active bit). Reading it lets the demo show
+// b being consumed one bit per clock without re-deriving anything in JavaScript.
+uint32_t sim_breg() { return (uint32_t)g_top->rootp->mulmod__DOT__b_reg; }
+
 }  // extern "C"
 
 #ifndef __EMSCRIPTEN__
