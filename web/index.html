@@ -165,7 +165,7 @@ circuit's registers, and every result is cross-checked against an independent
 <span class="mono">(a·b) mod m</span>.</p>
 
 <h2 class="section-head">tested, and proven</h2>
-<p>Simulation demonstrates correctness for the cases exercised; formal verification proves it for every input. Both live
+<p>Simulation checks the cases in the testbench; formal verification proves correctness for every input. Both live
 in the repository and re-run with an open toolchain:</p>
 <pre class="code">git clone https://github.com/cong-or/blindsig-accel
 cd blindsig-accel/blindsig-rtl
@@ -184,7 +184,7 @@ from firmware.</p>
   <tr><td class="k">0x10</td><td>MODULUS</td><td>modulus in</td></tr>
 </table>
 <p class="dim">hardware: CERN-OHL-P-2.0 · software: MIT or Apache-2.0 · toolchain: 100% open
-(Yosys · nextpnr · Verilator · SymbiYosys · Icarus)</p>
+(Yosys · Verilator · SymbiYosys · Icarus)</p>
 
 </main>
 
