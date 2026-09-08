@@ -16,6 +16,10 @@ formally-verified structure but swaps in **Montgomery reduction**, scales to ful
 RSA-2048/3072 widths, and chains it into a modular-exponentiation pipeline (see the
 [top-level README](../README.md)).
 
+**The three parts of this repo:** the hardware (this directory, `blindsig-rtl/`), the RISC-V SoC that
+runs it ([`blindsig-soc/`](../blindsig-soc/)), and the bare-metal Rust driver
+([`blindsig-fw/`](../blindsig-fw/)).
+
 ## Modules
 
 | File | What | Notes |
@@ -26,8 +30,8 @@ RSA-2048/3072 widths, and chains it into a modular-exponentiation pipeline (see 
 
 **Constant-time** here means: fixed cycle count independent of the operand values,
 no early exit, no data-dependent branching in the datapath. `tb/tb_mulmod.v`
-checks this directly — it asserts every multiplication, from `0` to `(m-1)²`,
-takes the *same* number of cycles.
+checks this directly: across a range of operands, up to `(m-1)²`, every
+multiplication takes the *same* number of cycles.
 
 ## Formal verification
 

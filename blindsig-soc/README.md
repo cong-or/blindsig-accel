@@ -5,6 +5,10 @@ a memory-mapped bus, with firmware that drives it. This is the **integration poi
 RISC-V CPU executing firmware that talks to the accelerator over MMIO, proving the full
 `CPU → bus → accelerator → result` stack in simulation.
 
+**The three parts of this repo:** the hardware ([`blindsig-rtl/`](../blindsig-rtl/)), the RISC-V SoC
+that runs it (this directory, `blindsig-soc/`), and the bare-metal Rust driver
+([`blindsig-fw/`](../blindsig-fw/)).
+
 ## Contents
 
 - `rtl/soc_top.v` — top-level SoC (CPU + memory + accelerator wrapper)

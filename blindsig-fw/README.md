@@ -8,6 +8,9 @@ and explicit ordering.
 The same register map and sequence are mirrored in the C firmware in
 [blindsig-soc](../blindsig-soc/), so the driver and the SoC integration stay in step.
 
+**The three parts of this repo:** the hardware ([`blindsig-rtl/`](../blindsig-rtl/)), the RISC-V SoC
+that runs it ([`blindsig-soc/`](../blindsig-soc/)), and this bare-metal Rust driver.
+
 ## Register interface
 
 Base `0x2000_0000` — CTRL `0x00` (START/RESET/LOAD_OP/LOAD_MOD), STATUS `0x04`
