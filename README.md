@@ -1,7 +1,7 @@
 # Blind Signature Accelerator — RISC-V Integration Prototype
 
-[![Live demo](https://img.shields.io/badge/live%20demo-real%20RTL%20in%20your%20browser-06b6d4?logo=webassembly&logoColor=white)](https://cong-or.github.io/blindsig-accel/)
-[![Formally verified](https://img.shields.io/badge/formally%20verified-SymbiYosys-22c55e)](blindsig-rtl#formal-verification)
+[![Live demo](https://img.shields.io/badge/live%20demo-real%20mulmod.v%20in%20your%20browser-06b6d4?logo=webassembly&logoColor=white)](https://cong-or.github.io/blindsig-accel/)
+[![Multiplier formally verified](https://img.shields.io/badge/multiplier%3A%20formally%20verified-SymbiYosys-22c55e)](blindsig-rtl#formal-verification)
 [![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
 
@@ -61,7 +61,7 @@ author. Re-check it yourself: `cd blindsig-rtl && make formal`.
 
 | Directory | What it is | Reusable as |
 |---|---|---|
-| [`blindsig-rtl/`](blindsig-rtl/) | Constant-time modular multiplier and reducer, plus the accelerator peripheral | `mulmod` for any modular arithmetic (RSA, DH, ECC, ZK) |
+| [`blindsig-rtl/`](blindsig-rtl/) | Constant-time modular multiplier and reducer, plus the accelerator peripheral | `mulmod` — the arithmetic primitive under RSA, DH, ECC and ZK, at 32-bit width today |
 | [`blindsig-soc/`](blindsig-soc/) | PicoRV32 SoC integrating CPU and accelerator, with C and Rust firmware | A reference for wiring an accelerator to a RISC-V core |
 | [`blindsig-fw/`](blindsig-fw/) | Bare-metal Rust (`no_std`) MMIO driver | A firmware driver for constrained devices |
 

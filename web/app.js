@@ -12,6 +12,7 @@
   let inA = 0, inB = 0, inM = 7;
   let hasBreg = false;
   let bitCells = [];
+  let reducedA = false, clampedM = false;
 
   const stages = ["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"];
 
@@ -29,6 +30,13 @@
     const box = g.querySelector("rect");
     box.setAttribute("stroke", "#81e6d9");
     setTimeout(() => box.setAttribute("stroke", "#4fd1c5"), STEP_MS * 0.7);
+  }
+  // acc box glows only while a computation is in progress (dark-cockpit: lit on attention)
+  function setAccLit(on) {
+    const g = $("s_acc"); if (!g) return;
+    const box = g.querySelector("rect"); if (!box) return;
+    if (on) { box.setAttribute("filter", "url(#glow)"); box.setAttribute("stroke", "#81e6d9"); }
+    else { box.removeAttribute("filter"); box.setAttribute("stroke", "#4fd1c5"); }
   }
   // dark-cockpit annunciation: dim at rest, the b-bit lights the live path
   function showActive(cyc, bit) {
@@ -53,7 +61,7 @@
     box.innerHTML = ""; bitCells = [];
     for (let i = 0; i < 32; i++) {
       const s = document.createElement("span");
-      s.className = "bit"; s.textContent = "0";
+      s.className = "bit"; s.textContent = "0"; s.setAttribute("aria-hidden", "true");
       box.appendChild(s); bitCells.push(s);
     }
   }
@@ -66,6 +74,8 @@
       c.textContent = String(bit);
       c.className = "bit" + (bit ? " one" : "") + (i === 0 ? " act" : "");
     }
+    const box = $("breg");
+    if (box) box.setAttribute("aria-label", "b register " + hex32(v) + ", " + popcount(v) + " of 32 bits set");
   }
   function updateAcc() {
     const e = $("acchex"); if (e && sim) e.textContent = hex32(sim.acc());
@@ -97,6 +107,8 @@
     ];
     const box = $("prove"); if (!box) return;
     box.innerHTML = "";
+    setActive([]); setAccLit(false); setProg(0);
+    $("cyc").textContent = "-- / 33"; $("accv").textContent = "—";
     let refCyc = null, allSame = true, allOk = true;
     cases.forEach((c) => {
       sim.reset(); sim.load(a, c.b, m);
@@ -128,15 +140,21 @@
     sim.reset(); sim.load(la, lb, lm);
     if (hasBreg) renderBits(lb);
     updateAcc(); updateContrast(lb);
-    setState("READY", "stby");
+    setState("STANDBY", "stby");
+    const st = $("status");
+    if (st) st.innerHTML = (allOk && allSame)
+      ? `demonstration complete · all four finished on cycle ${refCyc}`
+      : `<span class="fault">demonstration complete · timing or result mismatch — see rows above</span>`;
   }
 
   function readInputs() {
     const pa = u32(parseInt($("in_a").value || "0", 10));
     const pb = u32(parseInt($("in_b").value || "0", 10));
     let pm = u32(parseInt($("in_m").value || "0", 10));
+    clampedM = pm < 2;
     if (pm < 2) pm = 2;
-    // mulmod's contract is a < m; reduce a so the demo always matches (a·b) mod m.
+    reducedA = pa >= pm;   // mulmod's contract is a < m
+    // reduce a so the demo always matches (a·b) mod m; the caveat is surfaced on completion.
     return { a: pa % pm, b: pb, m: pm };
   }
 
@@ -147,6 +165,8 @@
     $("cyc").textContent = "00 / 33";
     setRes("…", false);
     setProg(0);
+    setAccLit(true);
+    const s = $("status"); if (s) s.setAttribute("aria-live", "polite");
     setState("RUN", "run");
   }
 
@@ -156,12 +176,19 @@
     const ok = res === exp;
     $("resv").textContent = String(res);
     setActive([]);
+    setAccLit(false);
     setProg(cycles);
     setState(ok ? "DONE" : "FAULT", ok ? "done" : "fault");
     setRes(ok ? String(res) : "ERR", !ok);
-    $("status").innerHTML = ok
-      ? `VERIFIED · result matches (a·b) mod m · ${cycles} cycles`
-      : `<span class="fault">FAULT · got ${res}, expected ${exp}</span>`;
+    const cav = reducedA ? ` · <span class="cav">a reduced mod m (core needs a &lt; m)</span>` : "";
+    const st = $("status");
+    if (ok) {
+      st.setAttribute("aria-live", "polite");
+      st.innerHTML = `cross-checked · result = (a·b) mod m ✓${cav}`;
+    } else {
+      st.setAttribute("aria-live", "assertive");
+      st.innerHTML = `<span class="fault">FAULT · got ${res}, expected ${exp}</span>`;
+    }
     // constant-time evidence
     const log = $("ctlog");
     const chip = document.createElement("span");
@@ -199,6 +226,7 @@
 
   function stepOne() {
     if (!sim) return;
+    stop();
     if (!timer && (sim.cycles() === 0 || sim.cycles() >= 33)) {
       const { a, b, m } = readInputs(); inA = a; inB = b; inM = m;
       sim.reset(); sim.load(a, b, m); updateContrast(b); if (hasBreg) renderBits(b); arm(); setRunning(true, true);
@@ -214,6 +242,20 @@
     showActive(cyc, bit);
     pulseAcc();
     if (done) finish(inA, inB, inM, cyc);
+  }
+
+  function resetPanel() {
+    stop();
+    const { a, b, m } = readInputs();
+    inA = a; inB = b; inM = m;
+    sim.reset(); sim.load(a, b, m);
+    if (hasBreg) renderBits(b);
+    updateAcc(); updateContrast(b);
+    setActive([]); setAccLit(false); setProg(0);
+    $("cyc").textContent = "00 / 33"; $("accv").textContent = "0";
+    setRes("—", false);
+    setState("STANDBY", "stby");
+    setRunning(false);
   }
 
   function setRunning(on, keepEnable) {
@@ -238,12 +280,17 @@
     $("btn_run").addEventListener("click", run);
     $("btn_step").addEventListener("click", stepOne);
     const bp = $("btn_prove"); if (bp) bp.addEventListener("click", prove);
+    const br = $("btn_reset"); if (br) br.addEventListener("click", resetPanel);
     ["in_a", "in_b", "in_m"].forEach((id) =>
       $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") run(); }));
     updateContrast(u32(parseInt($("in_b").value || "0", 10)));
     $("status").innerHTML = 'ready · the real <span class="mono">mulmod.v</span> is loaded';
-    setState("READY", "stby");
-    run(); // show it working immediately
+    setState("STANDBY", "stby");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      resetPanel(); // motion-sensitive: static primed panel, no auto-run
+    } else {
+      run(); // show it working immediately
+    }
   }
 
   window.addEventListener("DOMContentLoaded", () => {

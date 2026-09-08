@@ -20,7 +20,7 @@ RSA-2048/3072 widths, and chains it into a modular-exponentiation pipeline (see 
 
 | File | What | Notes |
 |---|---|---|
-| `rtl/mulmod.v` | **Constant-time modular multiplier** `(a·b) mod m` | Bit-serial, MSB-first, WIDTH-cycle. Every step does identical work; the "reduce" and "add" choices are muxes, not branches. Reusable for any modular arithmetic. |
+| `rtl/mulmod.v` | **Constant-time modular multiplier** `(a·b) mod m` | Bit-serial, MSB-first, WIDTH-cycle. Every step does identical work; the "reduce" and "add" choices are muxes, not branches. The arithmetic primitive under RSA, DH, ECC and ZK, at 32-bit width today. |
 | `rtl/redmod.v` | Constant-time modular reduction `x mod m` | Brings an operand into range (`< m`) before multiplication. |
 | `rtl/blindsig_accel.v` | MMIO peripheral: `operand² mod modulus` | Wraps `redmod → mulmod` behind the register interface. |
 

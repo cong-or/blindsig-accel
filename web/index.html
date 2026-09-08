@@ -12,7 +12,7 @@
 <div class="container">
 
 <header>
-  <div class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></div>
+  <h1 class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></h1>
   <div class="dim">a constant-time modular multiplier for risc-v — cycle-accurate simulation, one clock at a time</div>
 </header>
 
@@ -22,21 +22,16 @@
   <a href="https://blindsig-hardware.org">project</a>
 </nav>
 
-<p><span class="mono">mulmod</span> is a hardware circuit that computes <span class="hl">(a·b) mod m</span>, processing one
-bit of <span class="mono">b</span> per clock in a fixed number of cycles regardless of the operands. That fixed
-timing is deliberate: on a general-purpose CPU, <a href="https://blindsig-hardware.org/#hardware">secret-dependent
-execution time</a> is a side channel; a fixed-function circuit closes it by construction.</p>
+<main>
 
-<p>The panel below is a <span class="hl">cycle-accurate simulation</span> of that circuit — in effect a
-see-through view of the mechanism, advanced one clock at a time. There is <span class="hl">no physical
-chip</span> in the browser, and nothing is re-implemented in JavaScript: the design is the genuine
-<span class="mono">mulmod.v</span> Verilog, compiled by Verilator to WebAssembly. The result, the
-accumulator and the cycle count are read directly from the simulated circuit's registers, and every
-result is cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
+<p><span class="mono">mulmod</span> computes <span class="hl">(a·b) mod m</span> in a fixed number of clocks
+regardless of the operands — a hardware answer to timing side channels. The panel below is a
+<span class="hl">cycle-accurate simulation</span> of the real <span class="mono">mulmod.v</span> Verilog,
+compiled by Verilator to WebAssembly and stepped one clock at a time. <a href="#how">how it works ↓</a></p>
 
 <h2 class="section-head" id="circuit">the circuit, one clock at a time</h2>
 
-<p class="scope"><b>Scope.</b> This is <span class="mono hl">mulmod</span> — the core modular multiplier, one building block. The blind-signature operations (blind RSA, blind Schnorr) and full RSA-2048/3072 widths are the <b>funded work</b>, not shown here. See the <a href="https://github.com/cong-or/blindsig-accel/blob/main/ROADMAP.md">roadmap</a>.</p>
+<p class="scope"><b>Scope.</b> This is <span class="mono hl">mulmod</span> — the core modular multiplier, one building block. <span class="mono">mulmod</span> itself is the general two-operand (a·b) mod m primitive shown here; the packaged accelerator currently wires it to compute operand² — a single modular squaring. The blind-signature operations (blind RSA, blind Schnorr) and full RSA-2048/3072 widths are the <b>funded work</b>, not shown here. See the <a href="https://github.com/cong-or/blindsig-accel/blob/main/ROADMAP.md">roadmap</a>.</p>
 
 <div class="instrument">
   <div class="prov">
@@ -44,7 +39,9 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
     <span class="prov-note">every readout is live from the circuit's registers · <a href="https://github.com/cong-or/blindsig-accel/blob/main/web/sim/mulmod_sim.cpp">inspect the harness ↗</a></span>
   </div>
   <div class="svgwrap">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" font-family="'Space Grotesk','Helvetica Neue',sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" font-family="'Space Grotesk','Helvetica Neue',sans-serif" role="img" aria-labelledby="dpttl dpdesc">
+  <title id="dpttl">mulmod datapath (schematic)</title>
+  <desc id="dpdesc">Simulation of the modular multiplier: a_reg, b_reg and m_reg feed a fixed pipeline — double, conditionally subtract m, add a on the current b bit, conditionally subtract m again, then select — looping 32 times into an accumulator kept below m. Every input completes in 33 clock cycles.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c0e10"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
     <linearGradient id="accgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101417"/><stop offset="1" stop-color="#0d0f11"/></linearGradient>
@@ -55,9 +52,9 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
     <style>
       .stage{fill:#101417;stroke:#2a3540;stroke-width:1.3}
       .name{fill:#b8c5d0;font-size:15px;font-weight:600}
-      .kick{fill:#6b7a86;font-size:10.5px;font-family:'Space Mono',monospace;letter-spacing:1.5px}
+      .kick{fill:#8b98a4;font-size:11px;font-family:'Space Mono',monospace;letter-spacing:1.2px}
       .val{fill:#4fd1c5;font-size:15px;font-family:'Space Mono',monospace;font-weight:700}
-      .mux{fill:#6b7a86;font-size:10px;font-family:'Space Mono',monospace}
+      .mux{fill:#8b98a4;font-size:11px;font-family:'Space Mono',monospace}
     </style>
   </defs>
   <rect width="1280" height="560" fill="url(#bg)"/>
@@ -67,7 +64,7 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
   <text x="300" y="60" class="val" font-size="19" opacity="0.9">result = (a · b) mod m</text>
   <line x1="48" y1="104" x2="1232" y2="104" stroke="#1a1f24" stroke-width="1"/>
   <text x="1232" y="56" text-anchor="end" class="kick">CYCLE</text>
-  <text id="cyc" x="1232" y="88" text-anchor="end" class="val" font-size="26">00 / 33</text>
+  <text id="cyc" x="1232" y="88" text-anchor="end" class="val" font-size="26" aria-hidden="true">00 / 33</text>
 
   <rect x="48" y="176" width="168" height="56" rx="11" fill="url(#accgrad)" stroke="#2a3540" stroke-width="1.3"/>
   <text x="64" y="200" class="name" font-size="14">a_reg</text><text x="64" y="219" class="mux">multiplicand · &lt; m</text>
@@ -83,16 +80,16 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
   <g id="s_red2"><rect x="712" y="206" width="136" height="60" rx="10" class="stage"/><text x="780" y="231" text-anchor="middle" class="name" font-size="14">reduce ⊖</text><text x="780" y="251" text-anchor="middle" class="mux">≥ m ? − m : keep</text></g>
   <g id="s_mux"><rect x="872" y="206" width="126" height="60" rx="10" fill="#0d1513" stroke="#2c7a7b" stroke-width="1.4"/><text x="935" y="231" text-anchor="middle" class="name" font-size="14" fill="#81e6d9">select</text><text x="935" y="251" text-anchor="middle" class="mux" fill="#6b9a92">b-bit ? red2 : red1</text></g>
 
-  <g id="s_acc"><rect x="1052" y="192" width="180" height="86" rx="12" fill="url(#accgrad)" stroke="#4fd1c5" stroke-width="1.6" filter="url(#glow)"/><text x="1068" y="218" class="name" font-size="14">acc</text><text x="1068" y="236" class="mux">always &lt; m</text><text id="accv" x="1216" y="258" text-anchor="end" class="val" font-size="24">0</text></g>
+  <g id="s_acc"><rect x="1052" y="192" width="180" height="86" rx="12" fill="url(#accgrad)" stroke="#4fd1c5" stroke-width="1.6"/><text x="1068" y="218" class="name" font-size="14">acc</text><text x="1068" y="236" class="mux">always &lt; m</text><text id="accv" x="1216" y="258" text-anchor="end" class="val" font-size="24" aria-hidden="true">0</text></g>
   <rect x="1052" y="360" width="180" height="68" rx="12" fill="#0d1513" stroke="#2c7a7b" stroke-width="1.4"/>
   <text x="1068" y="386" class="name" font-size="14" fill="#81e6d9">result</text><text x="1068" y="404" class="mux" fill="#6b9a92">(a·b) mod m</text>
   <text id="resv" x="1216" y="420" text-anchor="end" class="val" font-size="22" fill="#81e6d9">—</text>
 
-  <rect x="256" y="436" width="384" height="40" rx="20" fill="#0d1513" stroke="#4fd1c5" stroke-width="1.2"/>
-  <circle cx="282" cy="456" r="5" fill="#4fd1c5" filter="url(#glowA)"/><text x="300" y="461" class="kick" fill="#a9e6e0">33 CYCLES · ANY OPERANDS · NO BRANCHES</text>
-  <a href="https://github.com/cong-or/blindsig-accel/tree/main/blindsig-rtl/formal" target="_blank">
-  <rect x="656" y="436" width="300" height="40" rx="20" fill="#0d1513" stroke="#2c7a7b" stroke-width="1.1"/>
-  <text x="678" y="461" class="kick" fill="#4fd1c5">★ FORMALLY VERIFIED · SYMBIYOSYS ↗</text>
+  <rect x="256" y="436" width="384" height="40" rx="20" fill="#0d1513" stroke="#2a3540" stroke-width="1.2"/>
+  <circle cx="282" cy="456" r="5" fill="#6b9a92"/><text x="300" y="461" class="kick" fill="#6b9a92">33 CYCLES · ANY OPERANDS · NO BRANCHES</text>
+  <a href="https://github.com/cong-or/blindsig-accel/tree/main/blindsig-rtl/formal" target="_blank" rel="noopener noreferrer" aria-label="Formally verified with SymbiYosys — opens the formal proofs on GitHub">
+  <rect x="656" y="436" width="300" height="40" rx="20" fill="#0d1513" stroke="#2a3540" stroke-width="1.1"/>
+  <text x="678" y="461" class="kick" fill="#6b9a92">★ FORMALLY VERIFIED · SYMBIYOSYS ↗</text>
   </a>
 
   <!-- forward pipeline -->
@@ -114,30 +111,31 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
 </svg>
   </div>
 
-  <p class="legend">Every clock performs the same operations — <b>double</b> the accumulator, <b>conditionally subtract m</b>, <b>add a</b> when the current bit of <span class="mono">b</span> is set, then conditionally subtract m again. No operation branches on a secret value, so every multiplication completes in the <b>same 33 clocks</b>.</p>
+  <p class="legend">Every clock performs the same operations — <b>double</b> the accumulator, <b>conditionally subtract m</b>, <b>add a</b> when the current bit of <span class="mono">b</span> is set, then conditionally subtract m again. No operation branches on a secret value, so every multiplication completes in the <b>same 33 clocks</b> — one load cycle plus 32 identical bit-steps.</p>
 
   <div class="internals">
     <div class="ind-label">b · MSB-first, one bit consumed per clock · live from the circuit's shift register</div>
-    <div id="breg" class="bits"></div>
+    <div id="breg" class="bits" role="img"></div>
     <div class="internals-foot"><span class="ind-label">accumulator</span> <span id="acchex" class="mono">0x00000000</span> <span class="dim">· stays &lt; m at every step (proven)</span></div>
   </div>
 
   <div class="annun">
-    <div class="ind"><span class="ind-label">State</span><span id="state" class="ind-state stby">STANDBY</span></div>
+    <div class="ind"><span class="ind-label">State</span><span id="state" class="ind-state stby">LOADING</span></div>
     <div class="ind ind-grow"><span class="ind-label">Sequence · 33 cycles</span><div class="prog"><i id="prog"></i></div></div>
     <div class="ind ind-right"><span class="ind-label">Result</span><span id="res2" class="ind-res">—</span></div>
   </div>
 
   <div class="controls">
-    <div class="field"><label>a — multiplicand</label><input id="in_a" class="mono" value="123456789"></div>
-    <div class="field"><label>b — multiplier</label><input id="in_b" class="mono" value="987654321"></div>
-    <div class="field"><label>m — modulus</label><input id="in_m" class="mono" value="4294967291"></div>
+    <div class="field"><label for="in_a">a — multiplicand</label><input id="in_a" class="mono" inputmode="numeric" value="123456789"></div>
+    <div class="field"><label for="in_b">b — multiplier</label><input id="in_b" class="mono" inputmode="numeric" value="987654321"></div>
+    <div class="field"><label for="in_m">m — modulus</label><input id="in_m" class="mono" inputmode="numeric" value="4294967291"></div>
     <div class="runbar">
       <button id="btn_step" class="btn">Step</button>
+      <button id="btn_reset" class="btn">Reset</button>
       <button id="btn_run" class="btn primary">Run</button>
     </div>
   </div>
-  <div id="status" class="status">loading <span class="mono">mulmod.v</span> …</div>
+  <div id="status" class="status" role="status" aria-live="polite" aria-atomic="true">loading <span class="mono">mulmod.v</span> …</div>
   <div class="ct-log-wrap"><span class="ind-label">Constant-time log</span><div id="ctlog" class="ct-log"></div></div>
 
   <div class="prove-wrap">
@@ -147,18 +145,26 @@ result is cross-checked against an independent <span class="mono">(a·b) mod m</
     </div>
     <div id="prove" class="prove"></div>
     <div class="contrast">
-      <div class="ind-label">Comparison · schematic, not a benchmark</div>
-      <div class="crow"><span class="clab">data-dependent software · one add per set bit</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
-      <div class="crow"><span class="clab mono">mulmod · fixed-function circuit</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
+      <div class="ind-label">Comparison · bar length = how much the timing depends on the secret, not elapsed time · schematic, not a benchmark</div>
+      <div class="crow"><span class="clab">software · work varies with b</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
+      <div class="crow"><span class="clab mono">mulmod · fixed, identical each clock</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
       <p class="note">A software modular multiplication that branches per bit completes sooner when <span class="mono">b</span> has fewer set bits; that variation is the timing side channel. The fixed-function circuit performs identical work every clock, so its latency is independent of the operands. The upper bar is a schematic of this data-dependent behaviour — not a benchmark of a specific processor.</p>
     </div>
   </div>
 </div>
 
-<p class="note">All inputs complete in the same 33 cycles. Each result is checked against an
-independently computed <span class="mono">(a·b) mod m</span>.</p>
+<h2 class="section-head" id="how">how it works</h2>
+<p>Each clock, <span class="mono">mulmod</span> processes one bit of <span class="mono">b</span>, so every
+multiplication finishes in the same number of cycles no matter the operands. That fixed timing is
+deliberate: on a general-purpose CPU, <a href="https://blindsig-hardware.org/#hardware">secret-dependent
+execution time</a> is a side channel; a fixed-function circuit closes it by construction.</p>
+<p>There is <span class="hl">no physical chip</span> in the browser, and nothing is re-implemented in
+JavaScript: the design is the genuine <span class="mono">mulmod.v</span> Verilog, compiled by Verilator to
+WebAssembly. The result, the accumulator and the cycle count are read directly from the simulated
+circuit's registers, and every result is cross-checked against an independent
+<span class="mono">(a·b) mod m</span>.</p>
 
-<h2 class="section-head">tested, and proved</h2>
+<h2 class="section-head">tested, and proven</h2>
 <p>Simulation demonstrates correctness for the cases exercised; formal verification proves it for every input. Both live
 in the repository and re-run with an open toolchain:</p>
 <pre class="code">git clone https://github.com/cong-or/blindsig-accel
@@ -179,6 +185,8 @@ from firmware.</p>
 </table>
 <p class="dim">hardware: CERN-OHL-P-2.0 · software: MIT or Apache-2.0 · toolchain: 100% open
 (Yosys · nextpnr · Verilator · SymbiYosys · Icarus)</p>
+
+</main>
 
 <footer>
   <span>blindsig · open hardware blind-signature accelerator · NLnet</span>
