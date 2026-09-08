@@ -16,7 +16,9 @@ signature operations (blind RSA and blind Schnorr) on RISC-V soft cores and FPGA
 > milestones; the bulk of the work is what the grant funds. See the [roadmap](ROADMAP.md).
 
 Live demo, running the real `mulmod.v` compiled to WebAssembly:
-<https://cong-or.github.io/blindsig-accel/>. Project site: <https://blindsig-hardware.org>.
+<https://cong-or.github.io/blindsig-accel/>. Project site: <https://blindsig-hardware.org>. It is one
+block built the way the [roadmap](ROADMAP.md#beyond-the-grant) describes: published with proofs anyone
+can re-run (`make formal`) and a software cross-check.
 
 ## Status
 
