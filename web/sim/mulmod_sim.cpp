@@ -3,7 +3,7 @@
 // The same C++ is used two ways:
 //   * native build  → runs a self-test (verifies the harness against (a*b)%m)
 //   * Emscripten    → exports sim_* to JavaScript so the browser runs the real
-//                     synthesized circuit, cycle-accurate, bit-for-bit.
+//                     circuit as a cycle-accurate simulation, bit-for-bit.
 //
 // This is not a re-implementation of the algorithm: Verilator turns the actual
 // Verilog into a cycle-accurate model, and this file only drives its clock and

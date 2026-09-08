@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mulmod — constant-time modular multiplier, running live</title>
-<meta name="description" content="mulmod.v, an open-hardware constant-time modular multiplier for RISC-V, compiled to WebAssembly and running one clock at a time in your browser.">
+<title>mulmod — constant-time modular multiplier, simulated live</title>
+<meta name="description" content="mulmod.v, an open-hardware constant-time modular multiplier for RISC-V — a cycle-accurate simulation of the real circuit, compiled to WebAssembly and stepped one clock at a time in your browser, like a see-through clock.">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%234fd1c5'/></svg>">
 </head>
@@ -13,7 +13,7 @@
 
 <header>
   <div class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></div>
-  <div class="dim">a constant-time modular multiplier for risc-v — running live</div>
+  <div class="dim">a constant-time modular multiplier for risc-v — a live, see-through simulation</div>
 </header>
 
 <nav>
@@ -22,23 +22,26 @@
   <a href="https://blindsig-hardware.org">project</a>
 </nav>
 
-<p><span class="mono">mulmod</span> computes <span class="hl">(a·b) mod m</span> in hardware — one bit of
+<p><span class="mono">mulmod</span> is a hardware circuit that computes <span class="hl">(a·b) mod m</span> — one bit of
 <span class="mono">b</span> per clock, in a fixed number of cycles regardless of the operands. The fixed
 timing is the whole point: on a general-purpose CPU, secrets leak through
 <a href="https://blindsig-hardware.org/#hardware">how long the work takes</a>; a fixed-function circuit
 cannot leak that way.</p>
 
-<p>The circuit below is not a mock-up. It is <span class="hl">the exact synthesised logic</span> —
-<span class="mono">mulmod.v</span> run through Verilator into WebAssembly — stepped one clock at a time.
-The result, the live accumulator and the cycle count are read straight from the compiled circuit's
-registers; nothing is re-implemented in JavaScript, and every result is cross-checked against an
-independent <span class="mono">(a·b) mod m</span>.</p>
+<p>Think of the panel below as a <span class="hl">see-through clock</span>: the same movement that would
+tick inside a sealed chip, shown here behind glass so you can watch every gear turn. It is a
+<span class="hl">cycle-accurate simulation</span> — there is <span class="hl">no physical chip</span> in your
+browser — but nothing is faked either. The mechanism <em>is</em> the genuine circuit:
+<span class="mono">mulmod.v</span>, the real Verilog, compiled by Verilator into WebAssembly and stepped
+one clock at a time. The result, the live accumulator and the cycle count are read straight from the
+simulated circuit's own registers; nothing is re-implemented in JavaScript, and every result is
+cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 
-<h2 class="section-head" id="circuit">the real circuit, live</h2>
+<h2 class="section-head" id="circuit">the movement, behind glass — a live simulation</h2>
 
 <div class="instrument">
   <div class="prov">
-    <span class="prov-src"><span class="mono">mulmod.v</span> → Verilator → WebAssembly · the exact synthesised logic</span>
+    <span class="prov-src"><span class="mono">mulmod.v</span> → Verilator → WebAssembly · a live simulation of the real RTL</span>
     <span class="prov-note">every readout is live from the circuit's registers · <a href="https://github.com/cong-or/blindsig-accel/blob/main/web/sim/mulmod_sim.cpp">inspect the harness ↗</a></span>
   </div>
   <div class="svgwrap">

@@ -3,7 +3,7 @@
 #
 #   Verilator turns rtl/mulmod.v into a cycle-accurate C++ model; Emscripten
 #   compiles that model + this harness to WASM. The browser then runs the exact
-#   synthesized circuit — no re-implementation.
+#   circuit as a cycle-accurate simulation — no re-implementation.
 #
 # Requires: verilator and em++ (an activated emsdk) on PATH.
 # Output:   web/wasm/{mulmod.js, mulmod.wasm}
