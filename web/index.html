@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>mulmod — constant-time modular multiplier, simulated live</title>
-<meta name="description" content="mulmod.v, an open-hardware constant-time modular multiplier for RISC-V — a cycle-accurate simulation of the real circuit, compiled to WebAssembly and stepped one clock at a time in your browser, like a see-through clock.">
+<meta name="description" content="mulmod.v — an open-hardware, constant-time modular multiplier for RISC-V. A cycle-accurate simulation of the circuit, compiled to WebAssembly and stepped one clock at a time in the browser.">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%234fd1c5'/></svg>">
 </head>
@@ -13,7 +13,7 @@
 
 <header>
   <div class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></div>
-  <div class="dim">a constant-time modular multiplier for risc-v — a live, see-through simulation</div>
+  <div class="dim">a constant-time modular multiplier for risc-v — cycle-accurate simulation, one clock at a time</div>
 </header>
 
 <nav>
@@ -22,22 +22,19 @@
   <a href="https://blindsig-hardware.org">project</a>
 </nav>
 
-<p><span class="mono">mulmod</span> is a hardware circuit that computes <span class="hl">(a·b) mod m</span> — one bit of
-<span class="mono">b</span> per clock, in a fixed number of cycles regardless of the operands. The fixed
-timing is the whole point: on a general-purpose CPU, secrets leak through
-<a href="https://blindsig-hardware.org/#hardware">how long the work takes</a>; a fixed-function circuit
-cannot leak that way.</p>
+<p><span class="mono">mulmod</span> is a hardware circuit that computes <span class="hl">(a·b) mod m</span>, processing one
+bit of <span class="mono">b</span> per clock in a fixed number of cycles regardless of the operands. That fixed
+timing is deliberate: on a general-purpose CPU, <a href="https://blindsig-hardware.org/#hardware">secret-dependent
+execution time</a> is a side channel; a fixed-function circuit closes it by construction.</p>
 
-<p>Think of the panel below as a <span class="hl">see-through clock</span>: the same movement that would
-tick inside a sealed chip, shown here behind glass so you can watch every gear turn. It is a
-<span class="hl">cycle-accurate simulation</span> — there is <span class="hl">no physical chip</span> in your
-browser — but nothing is faked either. The mechanism <em>is</em> the genuine circuit:
-<span class="mono">mulmod.v</span>, the real Verilog, compiled by Verilator into WebAssembly and stepped
-one clock at a time. The result, the live accumulator and the cycle count are read straight from the
-simulated circuit's own registers; nothing is re-implemented in JavaScript, and every result is
-cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
+<p>The panel below is a <span class="hl">cycle-accurate simulation</span> of that circuit — in effect a
+see-through view of the mechanism, advanced one clock at a time. There is <span class="hl">no physical
+chip</span> in the browser, and nothing is re-implemented in JavaScript: the design is the genuine
+<span class="mono">mulmod.v</span> Verilog, compiled by Verilator to WebAssembly. The result, the
+accumulator and the cycle count are read directly from the simulated circuit's registers, and every
+result is cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 
-<h2 class="section-head" id="circuit">the movement, behind glass — a live simulation</h2>
+<h2 class="section-head" id="circuit">the circuit, one clock at a time</h2>
 
 <p class="scope"><b>Scope.</b> This is <span class="mono hl">mulmod</span> — the core modular multiplier, one building block. The blind-signature operations (blind RSA, blind Schnorr) and full RSA-2048/3072 widths are the <b>funded work</b>, not shown here. See the <a href="https://github.com/cong-or/blindsig-accel/blob/main/ROADMAP.md">roadmap</a>.</p>
 
@@ -117,7 +114,7 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 </svg>
   </div>
 
-  <p class="legend">Each clock the same few gears turn — <b>double</b> the accumulator, <b>subtract m</b> if it overflowed, <b>add a</b> when this bit of <span class="mono">b</span> is 1, subtract m again. No step branches on a secret, so every multiply takes the <b>same 33 clocks</b>.</p>
+  <p class="legend">Every clock performs the same operations — <b>double</b> the accumulator, <b>conditionally subtract m</b>, <b>add a</b> when the current bit of <span class="mono">b</span> is set, then conditionally subtract m again. No operation branches on a secret value, so every multiplication completes in the <b>same 33 clocks</b>.</p>
 
   <div class="internals">
     <div class="ind-label">b · MSB-first, one bit consumed per clock · live from the circuit's shift register</div>
@@ -145,24 +142,24 @@ cross-checked against an independent <span class="mono">(a·b) mod m</span>.</p>
 
   <div class="prove-wrap">
     <div class="prove-head">
-      <span class="ind-label">Constant-time proof · wildly different inputs, identical timing</span>
-      <button id="btn_prove" class="btn">Prove it ▸</button>
+      <span class="ind-label">Constant-time demonstration · varied inputs, identical latency</span>
+      <button id="btn_prove" class="btn">Demonstrate ▸</button>
     </div>
     <div id="prove" class="prove"></div>
     <div class="contrast">
-      <div class="ind-label">why it matters — schematic, not a measurement</div>
-      <div class="crow"><span class="clab">branchy software · adds only on 1-bits</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
-      <div class="crow"><span class="clab mono">mulmod · this circuit</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
-      <p class="note">A mod-mul that branches per bit finishes sooner when <span class="mono">b</span> has fewer 1-bits — that variation is the leak. This circuit does identical work every clock, so its runtime reveals nothing about the operands. (The upper bar is a schematic of the classic software behaviour, not a benchmark of any particular CPU.)</p>
+      <div class="ind-label">Comparison · schematic, not a benchmark</div>
+      <div class="crow"><span class="clab">data-dependent software · one add per set bit</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
+      <div class="crow"><span class="clab mono">mulmod · fixed-function circuit</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
+      <p class="note">A software modular multiplication that branches per bit completes sooner when <span class="mono">b</span> has fewer set bits; that variation is the timing side channel. The fixed-function circuit performs identical work every clock, so its latency is independent of the operands. The upper bar is a schematic of this data-dependent behaviour — not a benchmark of a specific processor.</p>
     </div>
   </div>
 </div>
 
-<p class="note">Any inputs land on the same 33 cycles. Each result is checked against
-<span class="mono">(a·b) mod m</span> computed independently.</p>
+<p class="note">All inputs complete in the same 33 cycles. Each result is checked against an
+independently computed <span class="mono">(a·b) mod m</span>.</p>
 
 <h2 class="section-head">tested, and proved</h2>
-<p>Simulation shows it works for the cases you run; formal verification proves it for every input. Both live
+<p>Simulation demonstrates correctness for the cases exercised; formal verification proves it for every input. Both live
 in the repository and re-run with an open toolchain:</p>
 <pre class="code">git clone https://github.com/cong-or/blindsig-accel
 cd blindsig-accel/blindsig-rtl

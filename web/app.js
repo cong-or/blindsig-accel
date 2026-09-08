@@ -90,10 +90,10 @@
     const m = readInputs().m;
     const a = u32(m - 1);                 // a < m — the multiplier's precondition
     const cases = [
-      { lab: "b = 0 · no 1-bits",       b: 0 },
-      { lab: "b = 0xFFFFFFFF · all 1s", b: 0xFFFFFFFF },
-      { lab: "b = 0xDEADBEEF",          b: 0xDEADBEEF },
-      { lab: "b = m − 1",               b: u32(m - 1) },
+      { lab: "b = 0 · no bits set",           b: 0 },
+      { lab: "b = 0xFFFFFFFF · all bits set", b: 0xFFFFFFFF },
+      { lab: "b = 0xDEADBEEF",                b: 0xDEADBEEF },
+      { lab: "b = m − 1",                     b: u32(m - 1) },
     ];
     const box = $("prove"); if (!box) return;
     box.innerHTML = "";
