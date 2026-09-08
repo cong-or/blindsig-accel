@@ -7,14 +7,15 @@
 //! read/write, so the compiler never caches or reorders these hardware pokes.
 //!
 //! ```ignore
-//! let accel = BlindSigAccel::new(0x2000_0000);
+//! let accel = BlindSigAccel::new(blindsig_fw::BLINDSIG_BASE);
 //! let result = accel.compute(&[7], &[10])?; // 10^2 mod 7 = 2
 //! ```
 #![no_std]
 
 use core::ptr;
 
-const BLINDSIG_BASE: usize = 0x2000_0000;
+/// Canonical base address of the accelerator's MMIO register block.
+pub const BLINDSIG_BASE: usize = 0x2000_0000;
 const REG_CTRL: usize = 0x00;
 const REG_STATUS: usize = 0x04;
 const REG_OPERAND: usize = 0x08;

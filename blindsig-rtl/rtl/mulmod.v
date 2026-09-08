@@ -17,8 +17,8 @@
 // Preconditions: a < m, b < m, m > 0.
 // Latency: exactly WIDTH clocks after `start`, independent of a, b, m.
 //
-// Constant-time by construction — this is the whole point of moving the
-// operation into a fixed-function datapath:
+// Constant-time by construction — the reason for moving the operation into
+// a fixed-function datapath:
 //   * every iteration performs the SAME work (one doubling, one add, two
 //     conditional subtracts) regardless of operand values;
 //   * each "if >= m then subtract" and the "if b[i] then add" is resolved
