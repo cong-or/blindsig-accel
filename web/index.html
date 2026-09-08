@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mulmod — constant-time modular multiplier, simulated live</title>
+<title>mulmod — constant-time modular multiplier · real Verilog, simulated in WebAssembly</title>
 <meta name="description" content="mulmod.v — an open-hardware, constant-time modular multiplier for RISC-V. A cycle-accurate simulation of the circuit, compiled to WebAssembly and stepped one clock at a time in the browser.">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%234fd1c5'/></svg>">
@@ -13,7 +13,7 @@
 
 <header>
   <h1 class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></h1>
-  <div class="dim">a constant-time modular multiplier for risc-v — cycle-accurate simulation, one clock at a time</div>
+  <div class="dim">a constant-time modular multiplier for risc-v — real Verilog, simulated in WebAssembly one clock at a time</div>
 </header>
 
 <nav>
@@ -35,7 +35,7 @@ compiled by Verilator to WebAssembly and stepped one clock at a time. <a href="#
 
 <div class="instrument">
   <div class="prov">
-    <span class="prov-src"><span class="mono">mulmod.v</span> → Verilator → WebAssembly · a live simulation of the real RTL</span>
+    <span class="prov-src">real Verilog (<span class="mono">mulmod.v</span>) → Verilator → WebAssembly · a live simulation in your browser</span>
     <span class="prov-note">every readout is live from the circuit's registers · <a href="https://github.com/cong-or/blindsig-accel/blob/main/web/sim/mulmod_sim.cpp">inspect the harness ↗</a></span>
   </div>
   <div class="svgwrap">
