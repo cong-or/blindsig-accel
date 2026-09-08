@@ -5,9 +5,10 @@
 [![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
 
-An open-source hardware accelerator for a RISC-V SoC, with the firmware that drives it. It is the
-integration proof-of-concept for a larger project: open hardware for blind signature operations
-(blind RSA and blind Schnorr) on RISC-V soft cores and FPGA.
+An open, formally-verified, constant-time modular multiplier for RISC-V — `mulmod.v` — wired into an
+accelerator peripheral, a PicoRV32 SoC, and a bare-metal driver, with a live in-browser simulation of
+the real RTL. It is the integration proof-of-concept for a larger project: open hardware for blind
+signature operations (blind RSA and blind Schnorr) on RISC-V soft cores and FPGA.
 
 > **This is an early feasibility prototype — not the finished accelerator.** It proves the open
 > toolchain and the CPU–accelerator integration with a formally-verified, constant-time core, but the
@@ -19,9 +20,11 @@ Live demo, running the real `mulmod.v` compiled to WebAssembly:
 
 ## Status
 
-What runs today proves the open toolchain and the CPU–accelerator integration end to end, on a
-de-risked foundation — the substantive cryptographic work is still ahead. The arithmetic is real and
-constant-time — no behavioural `*` or `%` in the datapath — on a single 32-bit word today.
+What runs today proves the open toolchain and the CPU–accelerator integration end to end; the
+cryptographic work itself is still ahead. The arithmetic is real, constant-time, and single-word
+(32-bit) today — no behavioural `*` or `%` in the datapath. The `mulmod` core is the general
+`(a·b) mod m` primitive; the packaged accelerator currently wires it to a single modular squaring
+(`operand²`) — the inner step of the exponentiation pipeline the grant funds.
 
 Three parts are deliberate stand-ins for the funded design, each a swap within the proven structure:
 
@@ -34,13 +37,15 @@ breakdown in [ROADMAP.md](ROADMAP.md).
 
 ## Quick start
 
-Requires [Icarus Verilog](https://steveicarus.github.io/iverilog/). The SoC test also needs a
-bare-metal RISC-V C toolchain (`riscv-none-elf-gcc`) on `PATH`.
+Requires [Icarus Verilog](https://steveicarus.github.io/iverilog/). Re-running the proofs (`make formal`)
+additionally needs [SymbiYosys](https://github.com/YosysHQ/sby) with Yosys and a SAT/SMT solver; the SoC
+integration test needs a bare-metal RISC-V C toolchain (`riscv-none-elf-gcc`) on `PATH`.
 
 ```sh
-cd blindsig-rtl && make        # simulate: unit test + accelerator
-cd blindsig-rtl && make formal # prove:    k-induction + equivalence (SymbiYosys)
-cd blindsig-soc && make        # full CPU -> accelerator integration test
+git clone https://github.com/cong-or/blindsig-accel && cd blindsig-accel
+make -C blindsig-rtl           # simulate: unit test + accelerator
+make -C blindsig-rtl formal    # prove:    k-induction + equivalence (SymbiYosys)
+make -C blindsig-soc           # full CPU -> accelerator integration test
 ./test.sh --ci                 # all of the above, with narration
 ```
 
@@ -52,10 +57,11 @@ The proofs are re-runnable objects, not claims:
   independent reference.
 - **In range** — the accumulator stays below `m` at every step, by unbounded k-induction at full
   32-bit width.
-- **Constant-time** — every multiplication takes the same number of cycles regardless of the operands, so it cannot leak secrets through timing.
+- **Constant-time** — every multiplication takes the same number of cycles regardless of the operands, so the datapath has no timing side channel by construction. This is asserted directly by the testbench (`tb/tb_mulmod.v`), which measures the cycle count for varied operands — from small values up to `(m-1)²` — and checks it is identical in every case.
 
-You have to trust only the open checker (Yosys and its SAT/SMT solver) and the Verilog — not the
-author. Re-check it yourself: `cd blindsig-rtl && make formal`.
+You have to trust only the open checker (Yosys and its SAT/SMT solver) and the design source under
+proof — not the author. Re-run the correctness and range proofs with `cd blindsig-rtl && make formal`;
+re-run the constant-time assertion with `cd blindsig-rtl && make`.
 
 ## Layout
 
@@ -67,6 +73,8 @@ author. Re-check it yourself: `cd blindsig-rtl && make formal`.
 
 The accelerator is a five-register peripheral at `0x2000_0000` (CTRL, STATUS, OPERAND, RESULT,
 MODULUS); the register map and driver sequence are documented in [`blindsig-rtl/`](blindsig-rtl/).
+Each sub-directory has its own README with standalone build instructions — `make` in `blindsig-rtl/`
+and `blindsig-soc/`, `cargo build` in `blindsig-fw/`.
 
 ## Why it matters
 
@@ -89,7 +97,7 @@ The reason this matters is a shift in where the hard part lives. Producing a des
 the difficulty is trusting one you didn't write — and, increasingly, one no human wrote at all. A block
 that arrives with machine-checkable proofs of what it computes and what it doesn't leak can be composed
 without re-auditing it by hand; one that arrives as "trust me" cannot. As more RTL is generated by tools
-and automated agents, that gap only widens — so "the proof travels with the part" becomes the practical
+and agents, that gap only widens — so "the proof travels with the part" becomes the practical
 basis for trust at scale. This project is a concrete, end-to-end instance of that model for open
 cryptographic hardware.
 
