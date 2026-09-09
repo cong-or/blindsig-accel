@@ -148,4 +148,9 @@ cores — those are future work, not yet built.
 `blindsig-soc/rtl/picorv32.v` is the third-party [PicoRV32](https://github.com/YosysHQ/picorv32) core
 by Claire Xenia Wolf, vendored unmodified under its original ISC license. All other work is original.
 
-<sub>**Development and AI use.** AI coding assistants (Claude) were used for the documentation and the in-browser demo; the RTL, the SoC integration and the formal-verification harness are hand-written, and I take responsibility for all delivered code. Correctness does not depend on who wrote a line — every result is cross-checked against an independent software reference and machine-checked with SymbiYosys.</sub>
+<details>
+<summary><sub><b>Development and AI use</b></sub></summary>
+
+<sub>AI coding assistants (Claude) were used for the documentation and the in-browser demo; the RTL, the SoC integration and the formal-verification harness are hand-written, and I take responsibility for all delivered code. Correctness does not depend on who wrote a line — every result is cross-checked against an independent software reference and machine-checked with SymbiYosys.</sub>
+
+</details>
