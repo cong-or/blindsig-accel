@@ -5,8 +5,8 @@
 [![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
 
-**Open hardware for blind-signature operations — blind RSA and blind Schnorr — on RISC-V soft cores and
-FPGA.** These operations rest on modular exponentiation over large integers; doing that arithmetic in a
+**Open hardware** for blind-signature operations — blind RSA and blind Schnorr — on RISC-V soft cores and
+FPGA. These operations rest on modular exponentiation over large integers; doing that arithmetic in a
 dedicated, constant-time circuit closes the timing side channels a general-purpose CPU reintroduces no
 matter how careful the software is.
 
