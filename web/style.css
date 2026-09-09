@@ -33,14 +33,14 @@ nav{margin:1rem 0 2rem;color:var(--dim)}
 nav a{margin-right:1.5rem}
 
 /* ---- prose ---- */
-.section-head{color:var(--teal);margin:2.5rem 0 1rem;font-size:1.05rem;font-weight:600;letter-spacing:.04em}
+.section-head{color:var(--bright);margin:2.5rem 0 1rem;font-size:1.05rem;font-weight:600;letter-spacing:.04em}
 p{margin:.75rem 0}
 .note{color:var(--dim);font-size:13px;margin:.5rem 0}
 
 /* ---- instrument ---- */
 .instrument{background:var(--panel);border:1px solid var(--line);margin:1.25rem 0}
 .prov{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem 1.25rem;padding:.55rem 1.1rem;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.03em}
-.prov-src{color:var(--teal)}
+.prov-src{color:var(--ink)}
 .prov-note{color:var(--dim)}
 .prov-note a{color:var(--teal-dk)}
 .prov-note a:hover{color:var(--teal)}
@@ -49,7 +49,7 @@ p{margin:.75rem 0}
 .controls{display:flex;gap:1.25rem;flex-wrap:wrap;align-items:flex-end;padding:1.1rem 1.1rem .4rem;border-top:1px solid var(--line)}
 .field{display:flex;flex-direction:column;gap:.35rem}
 .field label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
-.field input{width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:4px;color:var(--teal);
+.field input{width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:4px;color:var(--bright);
   font-family:'Space Mono',monospace;font-size:15px;padding:.5rem .6rem;outline:none}
 .field input:focus{border-color:var(--teal-dk)}
 .runbar{display:flex;gap:.5rem;margin-left:auto}
@@ -73,7 +73,7 @@ pre.code .c{color:var(--dim)}
 .reg{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:13px;font-family:'Space Mono',monospace}
 .reg th,.reg td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid var(--line)}
 .reg th{font-size:11px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;font-family:'Space Grotesk',system-ui,sans-serif}
-.reg td.k{color:var(--teal)}
+.reg td.k{color:var(--bright)}
 
 /* ---- footer ---- */
 footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);color:var(--dim);
@@ -88,7 +88,7 @@ footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);colo
 .annun .ind-right{align-items:flex-end;min-width:120px}
 .ind-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#85909a;text-transform:uppercase}
 .ind-state{font-family:'Space Mono',monospace;font-size:15px;letter-spacing:.14em;font-weight:700;display:flex;align-items:center;gap:.55rem}
-.ind-state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+.ind-state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
 .ind-state.stby{color:#5c6570}
 .ind-state.stby::before{box-shadow:none}
 .ind-state.run{color:var(--teal)}
@@ -112,9 +112,9 @@ footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);colo
 .bits{display:flex;gap:2px;flex-wrap:wrap}
 .bits .bit{font-family:'Space Mono',monospace;font-size:12px;width:20px;height:22px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:2px;background:var(--panel2);color:#3a3f44;transition:all .1s linear}
 .bits .bit.one{color:var(--teal);border-color:var(--teal-dk)}
-.bits .bit.act{background:#0d1513;border-color:var(--teal);color:var(--teal-br);box-shadow:0 0 8px rgba(79,209,197,.5)}
-.internals-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-#acchex{color:var(--teal-br);font-size:14px}
+.bits .bit.act{background:#0d1513;border-color:var(--teal);color:var(--teal-br);box-shadow:0 0 5px rgba(79,209,197,.35)}
+.internals-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.statechip{display:flex;align-items:center;gap:.5rem}
 .prove-wrap{border-top:1px solid var(--line);padding:.85rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.75rem}
 .prove-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 .prove{display:flex;flex-direction:column;gap:.35rem}

@@ -37,7 +37,7 @@
     const g = $("s_acc"); if (!g) return;
     const box = g.querySelector("rect"); if (!box) return;
     if (on) { box.setAttribute("filter", "url(#glow)"); box.setAttribute("stroke", "#81e6d9"); }
-    else { box.removeAttribute("filter"); box.setAttribute("stroke", "#4fd1c5"); }
+    else { box.removeAttribute("filter"); box.setAttribute("stroke", "#2a3540"); }
   }
   // dark-cockpit annunciation: dim at rest, the b-bit lights the live path
   function showActive(cyc, bit) {
@@ -227,7 +227,6 @@
       updateAcc();
       setProg(cyc);
       showActive(cyc, bit);
-      pulseAcc();
       if (done) { stop(); finish(a, b, m, cyc); }
     }, STEP_MS);
   }
@@ -248,7 +247,6 @@
     updateAcc();
     setProg(cyc);
     showActive(cyc, bit);
-    pulseAcc();
     if (done) finish(inA, inB, inM, cyc);
   }
 
