@@ -1,4 +1,4 @@
-# Open Hardware Blind Signature Accelerator for RISC‑V
+# Blind Signature Accelerator for RISC-V
 
 [![Live demo](https://img.shields.io/badge/live%20demo-real%20mulmod.v%20in%20your%20browser-06b6d4?logo=webassembly&logoColor=white)](https://cong-or.github.io/blindsig-accel/)
 [![Multiplier formally verified](https://img.shields.io/badge/multiplier%3A%20formally%20verified-SymbiYosys-22c55e)](blindsig-rtl#formal-verification)
