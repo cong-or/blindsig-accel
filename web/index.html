@@ -41,7 +41,7 @@ formal</span>. <a href="#how">how it works ↓</a></p>
     <span class="prov-note">every readout is live from the circuit's registers · <a href="https://github.com/cong-or/blindsig-accel/blob/main/web/sim/mulmod_sim.cpp">inspect the harness ↗</a></span>
   </div>
   <div class="svgwrap">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" font-family="'Space Grotesk','Helvetica Neue',sans-serif" role="img" aria-labelledby="dpttl dpdesc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 500" font-family="'Space Grotesk','Helvetica Neue',sans-serif" role="img" aria-labelledby="dpttl dpdesc">
   <title id="dpttl">mulmod datapath (schematic)</title>
   <desc id="dpdesc">Simulation of the modular multiplier: a_reg, b_reg and m_reg feed a fixed pipeline — double, conditionally subtract m, add a on the current b bit, conditionally subtract m again, then select — looping 32 times into an accumulator kept below m. Every input completes in 33 clock cycles.</desc>
   <defs>
@@ -59,8 +59,8 @@ formal</span>. <a href="#how">how it works ↓</a></p>
       .mux{fill:#8b98a4;font-size:11px;font-family:'Space Mono',monospace}
     </style>
   </defs>
-  <rect width="1280" height="560" fill="url(#bg)"/>
-  <rect width="1280" height="560" fill="url(#grid)" opacity="0.6"/>
+  <rect width="1280" height="500" fill="url(#bg)"/>
+  <rect width="1280" height="500" fill="url(#grid)" opacity="0.6"/>
   <text x="48" y="62" class="name" font-size="34" letter-spacing="1">mulmod</text>
   <text x="49" y="86" class="kick">CONSTANT-TIME MODULAR MULTIPLIER</text>
   <line x1="48" y1="104" x2="1232" y2="104" stroke="#1a1f24" stroke-width="1"/>
@@ -118,7 +118,7 @@ formal</span>. <a href="#how">how it works ↓</a></p>
     </div>
     <div id="prove" class="prove"></div>
     <div class="contrast">
-      <div class="ind-label">Comparison · bar length = how much the timing depends on the secret, not elapsed time · schematic, not a benchmark</div>
+      <div class="ind-label">Comparison · schematic, not a benchmark</div>
       <div class="crow"><span class="clab">software · work varies with b</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
       <div class="crow"><span class="clab mono">mulmod · fixed, identical each clock</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
       <p class="note">A software modular multiplication that branches per bit completes sooner when <span class="mono">b</span> has fewer set bits; that variation is the timing side channel. The fixed-function circuit performs identical work every clock, so its latency is independent of the operands. The upper bar is a schematic of this data-dependent behaviour — not a benchmark of a specific processor.</p>

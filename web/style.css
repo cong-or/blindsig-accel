@@ -35,7 +35,7 @@ nav a{margin-right:1.5rem}
 /* ---- prose ---- */
 .section-head{color:var(--bright);margin:2.5rem 0 1rem;font-size:1.05rem;font-weight:600;letter-spacing:.04em}
 p{margin:.75rem 0}
-.note{color:var(--dim);font-size:13px;margin:.5rem 0}
+.note{color:var(--ink);font-size:13px;margin:.5rem 0}
 
 /* ---- instrument ---- */
 .instrument{background:var(--panel);border:1px solid var(--line);margin:1.25rem 0}
@@ -86,7 +86,7 @@ footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);colo
 .annun .ind + .ind{border-left:1px solid var(--line)}
 .annun .ind-grow{flex:1}
 .annun .ind-right{align-items:flex-end;min-width:120px}
-.ind-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#85909a;text-transform:uppercase}
+.ind-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.11em;color:#9aa5b0;text-transform:uppercase}
 .ind-state{font-family:'Space Mono',monospace;font-size:15px;letter-spacing:.14em;font-weight:700;display:flex;align-items:center;gap:.55rem}
 .ind-state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
 .ind-state.stby{color:#5c6570}
