@@ -1,6 +1,6 @@
 # fw/Makefile — Build RISC-V firmware for PicoRV32 SoC
 
-CROSS   = /home/soze/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-
+CROSS  ?= riscv-none-elf-
 CC      = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 SIZE    = $(CROSS)size

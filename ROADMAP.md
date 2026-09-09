@@ -32,8 +32,8 @@ The same pipeline extends to:
   steps to a verifiable identity. Those establish *what a part is, that it matches its source, and who
   built it* — but not *what the part computes and what it does not leak*. That last piece is the one
   missing for hardware, and it is what this project supplies first: `mulmod.v` is published not as
-  "trust the author" but with re-runnable proofs of correctness, range, and constant-time behaviour,
-  checkable against an open prover on someone else's machine.
+  "trust the author" but with re-runnable proofs of correctness and range checkable against an open
+  prover on someone else's machine, plus a constant-time cycle-count check in simulation.
 
   The longer-term goal, well beyond this grant, is a public library of open-hardware blocks assembled the
   same way: each linking its source, a reproducible build recipe, provenance, and proof scripts, so a

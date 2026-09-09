@@ -1,6 +1,6 @@
 # fw-rust/Makefile — Build Rust firmware for PicoRV32 SoC
 
-CROSS   = /home/soze/xpack-riscv-none-elf-gcc-14.2.0-3/bin/riscv-none-elf-
+CROSS  ?= riscv-none-elf-
 OBJCOPY = $(CROSS)objcopy
 
 ELF     = target/riscv32i-unknown-none-elf/release/blindsig-soc-fw
