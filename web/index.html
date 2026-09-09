@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mulmod — constant-time modular multiplier · real Verilog, simulated in WebAssembly</title>
-<meta name="description" content="mulmod.v — an open-hardware, constant-time modular multiplier for RISC-V. A cycle-accurate simulation of the circuit, compiled to WebAssembly and stepped one clock at a time in the browser.">
+<title>blindsig — open-hardware blind-signature accelerator · live constant-time mulmod circuit in WebAssembly</title>
+<meta name="description" content="blindsig — an open-hardware blind-signature accelerator for RISC-V. This demo runs mulmod.v, its constant-time modular multiplier, compiled to WebAssembly and stepped one clock at a time in the browser.">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%234fd1c5'/></svg>">
 </head>
@@ -13,7 +13,7 @@
 
 <header>
   <h1 class="logo">blindsig<span class="hal"></span> <span class="sub">· mulmod</span></h1>
-  <div class="dim">a constant-time modular multiplier for risc-v — real Verilog, simulated in WebAssembly one clock at a time</div>
+  <div class="dim">the constant-time modular multiplier at the heart of an open-hardware blind-signature accelerator — real Verilog, simulated in WebAssembly one clock at a time</div>
 </header>
 
 <nav>
@@ -27,7 +27,15 @@
 <p><span class="mono">mulmod</span> computes <span class="hl">(a·b) mod m</span> in a fixed number of clocks
 regardless of the operands — a hardware answer to timing side channels. The panel below is a
 <span class="hl">cycle-accurate simulation</span> of the real <span class="mono">mulmod.v</span> Verilog,
-compiled by Verilator to WebAssembly and stepped one clock at a time. <a href="#how">how it works ↓</a></p>
+compiled by Verilator to WebAssembly and stepped one clock at a time. You don't have to take my word for
+any of it: clone the repo and re-run the proofs yourself with an open prover — <span class="mono">make
+formal</span>. <a href="#how">how it works ↓</a></p>
+
+<p>Blind signatures are what make <span class="hl">private digital cash</span> possible: a signer
+authorises a token without ever seeing it. GNU Taler, Cashu and Fedimint use them for privacy-preserving
+payments, and offline Digital Euro designs point to blind signatures in secure hardware for unlinkable
+transactions. <span class="mono">mulmod</span> is the core arithmetic those signatures are built on — the
+funded work builds the blind-signature operations on top of it.</p>
 
 <h2 class="section-head" id="circuit">the circuit, one clock at a time</h2>
 
@@ -113,6 +121,20 @@ compiled by Verilator to WebAssembly and stepped one clock at a time. <a href="#
 
   <p class="legend">Every clock performs the same operations — <b>double</b> the accumulator, <b>conditionally subtract m</b>, <b>add a</b> when the current bit of <span class="mono">b</span> is set, then conditionally subtract m again. No operation branches on a secret value, so every multiplication completes in the <b>same 33 clocks</b> — one load cycle plus 32 identical bit-steps.</p>
 
+  <div class="prove-wrap">
+    <div class="prove-head">
+      <span class="ind-label">Constant-time demonstration · varied inputs, identical latency</span>
+      <button id="btn_prove" class="btn primary">Prove it — 4 inputs, same 33 cycles ▸</button>
+    </div>
+    <div id="prove" class="prove"></div>
+    <div class="contrast">
+      <div class="ind-label">Comparison · bar length = how much the timing depends on the secret, not elapsed time · schematic, not a benchmark</div>
+      <div class="crow"><span class="clab">software · work varies with b</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
+      <div class="crow"><span class="clab mono">mulmod · fixed, identical each clock</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
+      <p class="note">A software modular multiplication that branches per bit completes sooner when <span class="mono">b</span> has fewer set bits; that variation is the timing side channel. The fixed-function circuit performs identical work every clock, so its latency is independent of the operands. The upper bar is a schematic of this data-dependent behaviour — not a benchmark of a specific processor.</p>
+    </div>
+  </div>
+
   <div class="internals">
     <div class="ind-label">b · MSB-first, one bit consumed per clock · live from the circuit's shift register</div>
     <div id="breg" class="bits" role="img"></div>
@@ -138,19 +160,6 @@ compiled by Verilator to WebAssembly and stepped one clock at a time. <a href="#
   <div id="status" class="status" role="status" aria-live="polite" aria-atomic="true">loading <span class="mono">mulmod.v</span> …</div>
   <div class="ct-log-wrap"><span class="ind-label">Constant-time log</span><div id="ctlog" class="ct-log"></div></div>
 
-  <div class="prove-wrap">
-    <div class="prove-head">
-      <span class="ind-label">Constant-time demonstration · varied inputs, identical latency</span>
-      <button id="btn_prove" class="btn">Demonstrate ▸</button>
-    </div>
-    <div id="prove" class="prove"></div>
-    <div class="contrast">
-      <div class="ind-label">Comparison · bar length = how much the timing depends on the secret, not elapsed time · schematic, not a benchmark</div>
-      <div class="crow"><span class="clab">software · work varies with b</span><span class="cbar"><i id="bar_cpu"></i></span><span id="cpu_steps" class="cval mono">—</span></div>
-      <div class="crow"><span class="clab mono">mulmod · fixed, identical each clock</span><span class="cbar"><i id="bar_hw"></i></span><span class="cval mono">33 · every input</span></div>
-      <p class="note">A software modular multiplication that branches per bit completes sooner when <span class="mono">b</span> has fewer set bits; that variation is the timing side channel. The fixed-function circuit performs identical work every clock, so its latency is independent of the operands. The upper bar is a schematic of this data-dependent behaviour — not a benchmark of a specific processor.</p>
-    </div>
-  </div>
 </div>
 
 <h2 class="section-head" id="how">how it works</h2>
@@ -165,12 +174,15 @@ circuit's registers, and every result is cross-checked against an independent
 <span class="mono">(a·b) mod m</span>.</p>
 
 <h2 class="section-head">tested, and proven</h2>
-<p>Simulation checks the cases in the testbench; formal verification proves correctness for every input. Both live
-in the repository and re-run with an open toolchain:</p>
+<p>Simulation checks the vectors in the testbench. Formal verification (SymbiYosys) does two things: at a
+small word width, where the whole input space is searchable, it proves the result exactly equals
+<span class="mono">(a·b) mod m</span>; at the full 32-bit width — the width this demo runs — it proves,
+unbounded by k-induction, that the accumulator stays reduced (<span class="mono">acc &lt; m</span>)
+throughout every run. Both re-run with an open toolchain:</p>
 <pre class="code">git clone https://github.com/cong-or/blindsig-accel
 cd blindsig-accel/blindsig-rtl
 make          <span class="c"># simulate — unit test + accelerator (Icarus Verilog)</span>
-make formal   <span class="c"># prove     — k-induction + equivalence (SymbiYosys)</span></pre>
+make formal   <span class="c"># prove     — range invariant (32-bit) + equivalence (reduced width)</span></pre>
 
 <h2 class="section-head">interface &amp; license</h2>
 <p>Instantiate the core directly in RTL, or drive the packaged accelerator over a 5-register MMIO interface

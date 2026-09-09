@@ -8,12 +8,9 @@ stands today:
 |---|---|---|
 | M1 | Montgomery modular multiplier and property verification | Partial. A constant-time multiplier exists and is formally verified, but reduces by conditional subtraction; Montgomery is not yet built. |
 | M2 | Modular-exponentiation pipeline and blind RSA | Not started. The core computes a single `operand²` squaring, not the square-and-multiply pipeline. |
-| M3 | Blind Schnorr and SymbiYosys formal verification | Partial. The formal method is proven out at 32-bit width; blind Schnorr is not built. |
+| M3 | Blind Schnorr and SymbiYosys formal verification | Partial. The formal method is proven out — the range invariant at full 32-bit width, end-to-end correctness exhaustively at a reduced width; blind Schnorr is not built. |
 | M4 | VexRiscv integration, Rust firmware, co-simulation | Partial. Integrated on PicoRV32 with C and Rust firmware; the VexRiscv port and Verilator co-simulation are not done. |
 | M5 | ECP5 synthesis, docs, reproducible build | Not started. Simulation only; not yet synthesised to FPGA fabric. |
-
-In short: what runs today is a formally-verified, constant-time modular squaring on a 32-bit word,
-integrated into a RISC-V SoC in simulation. The blind-signature operations themselves are still ahead.
 
 The register interface, the `mulmod` and `redmod` primitives, the formal harness, and the SoC
 integration all carry over directly — the funded work builds on this foundation rather than restarting.

@@ -136,7 +136,9 @@ footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);colo
 
 .cav{color:var(--ink)}
 
-@media(max-width:560px){.controls{gap:.75rem}.field input{width:120px}.annun{flex-wrap:wrap}.annun .ind-right{align-items:flex-start}.prow .plab,.crow .clab{min-width:120px}}
+@media(max-width:560px){.controls{gap:.75rem}.field input{width:120px}.annun{flex-wrap:wrap}.annun .ind-right{align-items:flex-start}.prow .plab,.crow .clab{min-width:120px}
+  .instrument .svgwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .instrument svg{min-width:720px}}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}

@@ -10,7 +10,12 @@ Try it live (the real RTL, compiled to WASM): <https://cong-or.github.io/blindsi
 The accelerator computes `operand² mod modulus` (a modular squaring — the inner step of
 square-and-multiply modular exponentiation) over a memory-mapped register interface. The
 arithmetic is done by two bit-serial datapaths — **not** by Verilog's behavioural `*`/`%`
-operators — so the peripheral is constant-time end to end. This is single-word (32-bit)
+operators — so both datapaths run in a fixed cycle count independent of the operand values.
+The multiplier (`mulmod.v`) is the one carrying formal proofs today, and its constant-time
+latency is also asserted directly by `tb/tb_mulmod.v`; the reducer (`redmod.v`) is
+constant-time by the same by-construction argument (fixed iteration count, muxed conditional
+subtraction) and is exercised — though not yet independently proven — by the accelerator
+testbench. This is single-word (32-bit)
 today and reduces by conditional subtraction; the funded work keeps this constant-time,
 formally-verified structure but swaps in **Montgomery reduction**, scales to full
 RSA-2048/3072 widths, and chains it into a modular-exponentiation pipeline (see the

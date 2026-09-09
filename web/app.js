@@ -13,6 +13,7 @@
   let hasBreg = false;
   let bitCells = [];
   let reducedA = false, clampedM = false;
+  let proved = false;   // auto-run the constant-time demonstration once, after the first completion
 
   const stages = ["s_dbl", "s_red1", "s_add", "s_red2", "s_mux"];
 
@@ -134,6 +135,11 @@
           : "⚠ timing differed across inputs — see cycle counts above")
       : "✗ a result disagreed with the reference";
     box.appendChild(v);
+    // pin the headline readouts to the proven cycle so they don't contradict the verdict
+    if (allOk && allSame) {
+      $("cyc").textContent = String(refCyc).padStart(2, "0") + " / 33";
+      setProg(refCyc);
+    }
     // leave the live panel primed for a fresh Run
     const { a: la, b: lb, m: lm } = readInputs();
     inA = la; inB = lb; inM = lm;
@@ -197,6 +203,8 @@
     log.prepend(chip);
     while (log.children.length > 6) log.removeChild(log.lastChild);
     setRunning(false);
+    // first completion: auto-run the four-input demonstration so the reviewer sees the proof unprompted
+    if (ok && !proved) { proved = true; setTimeout(prove, 900); }
   }
 
   function run() {
@@ -283,6 +291,9 @@
     const br = $("btn_reset"); if (br) br.addEventListener("click", resetPanel);
     ["in_a", "in_b", "in_m"].forEach((id) =>
       $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") run(); }));
+    // keep the schematic software-vs-hardware contrast live as the reviewer edits b
+    $("in_b").addEventListener("input", () =>
+      updateContrast(u32(parseInt($("in_b").value || "0", 10))));
     updateContrast(u32(parseInt($("in_b").value || "0", 10)));
     $("status").innerHTML = 'ready · the real <span class="mono">mulmod.v</span> is loaded';
     setState("STANDBY", "stby");
