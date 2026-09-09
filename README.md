@@ -139,14 +139,6 @@ software reference, and CI that re-runs both. Blind signatures are the first pri
 same pipeline is intended to apply to other modular-arithmetic, elliptic-curve, hashing, and post-quantum
 cores — those are future work, not yet built.
 
-## Development, provenance and AI use
-
-This project uses AI coding assistants (Claude) for documentation and the in-browser demo. The RTL, the
-SoC integration, and the formal-verification harness are written by hand. I take responsibility for all
-delivered code and can explain each decision; correctness does not depend on who wrote a line — every
-result is cross-checked in simulation against an independent software reference, and the core arithmetic
-is machine-checked with SymbiYosys: the same re-runnable evidence described above, not the author's word.
-
 ## Licensing
 
 - **Hardware** — Verilog RTL, under [CERN-OHL-P-2.0](blindsig-rtl/LICENSE).
@@ -155,3 +147,5 @@ is machine-checked with SymbiYosys: the same re-runnable evidence described abov
 
 `blindsig-soc/rtl/picorv32.v` is the third-party [PicoRV32](https://github.com/YosysHQ/picorv32) core
 by Claire Xenia Wolf, vendored unmodified under its original ISC license. All other work is original.
+
+<sub>**Development and AI use.** AI coding assistants (Claude) were used for the documentation and the in-browser demo; the RTL, the SoC integration and the formal-verification harness are hand-written, and I take responsibility for all delivered code. Correctness does not depend on who wrote a line — every result is cross-checked against an independent software reference and machine-checked with SymbiYosys.</sub>
