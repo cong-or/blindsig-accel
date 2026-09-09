@@ -5,15 +5,10 @@
 [![ci](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml/badge.svg)](https://github.com/cong-or/blindsig-accel/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-CERN--OHL--P%2C%20MIT%2FApache--2.0-blue)](#licensing)
 
-![mulmod datapath — a constant-time bit-serial modular multiplier](doc/datapath.png)
-
 **Open hardware for blind-signature operations — blind RSA and blind Schnorr — on RISC-V soft cores and
-FPGA.** A blind signature lets someone get a message signed *without the signer seeing its contents*: the
-cryptographic basis for digital cash that is both publicly verifiable and private. GNU Taler (blind RSA,
-with Clause Blind Schnorr work underway), Cashu and Fedimint build on blind signatures today, and
-offline-payment designs for the European Digital Euro are a leading motivation for running these
-operations inside secure hardware. Doing that arithmetic in a dedicated, constant-time circuit closes the
-timing side channels a general-purpose CPU reintroduces no matter how careful the software is.
+FPGA.** These operations rest on modular exponentiation over large integers; doing that arithmetic in a
+dedicated, constant-time circuit closes the timing side channels a general-purpose CPU reintroduces no
+matter how careful the software is.
 
 The first building block is real and runnable today: **`mulmod.v`**, a constant-time modular multiplier,
 formally verified with SymbiYosys, wired into an accelerator peripheral, a PicoRV32 SoC and a bare-metal
@@ -61,10 +56,9 @@ This is not one monolith — it is independently reusable blocks, each buildable
 - **the SoC reference and the `no_std` Rust/C driver** — a worked example of wiring an accelerator to a
   soft core and driving it from bare metal.
 
-**Who reuses them.** Privacy-preserving payment systems needing blind-signature crypto in trustworthy
-hardware — offline Digital Euro, GNU Taler, Cashu, Fedimint, dedicated e-cash devices — plus any RISC-V
-SoC needing the asymmetric-crypto acceleration the ratified RISC-V crypto extensions deliberately leave
-to a coprocessor (they cover AES/SHA, not public-key).
+**Who reuses them.** Any RISC-V SoC needing asymmetric-crypto acceleration — the ratified RISC-V crypto
+extensions cover AES/SHA but deliberately leave public-key operations to a coprocessor — and any design
+that needs a verified constant-time modular multiplier (RSA, DH, ECC, ZK).
 
 **How a consumer adopts one.** Clone the block, read its spec and register map, instantiate the RTL (or
 drive the MMIO peripheral from the Rust/C driver), and — for `mulmod` today — re-run `make formal` to

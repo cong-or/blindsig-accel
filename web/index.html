@@ -31,12 +31,6 @@ compiled by Verilator to WebAssembly and stepped one clock at a time. You don't 
 any of it: clone the repo and re-run the proofs yourself with an open prover — <span class="mono">make
 formal</span>. <a href="#how">how it works ↓</a></p>
 
-<p>Blind signatures are what make <span class="hl">private digital cash</span> possible: a signer
-authorises a token without ever seeing it. GNU Taler, Cashu and Fedimint use them for privacy-preserving
-payments, and offline Digital Euro designs point to blind signatures in secure hardware for unlinkable
-transactions. <span class="mono">mulmod</span> is the core arithmetic those signatures are built on — the
-funded work builds the blind-signature operations on top of it.</p>
-
 <h2 class="section-head" id="circuit">the circuit, one clock at a time</h2>
 
 <p class="scope"><b>Scope.</b> This is <span class="mono hl">mulmod</span> — the core modular multiplier, one building block. <span class="mono">mulmod</span> itself is the general two-operand (a·b) mod m primitive shown here; the packaged accelerator currently wires it to compute operand² — a single modular squaring. The blind-signature operations (blind RSA, blind Schnorr) and full RSA-2048/3072 widths are the <b>funded work</b>, not shown here. See the <a href="https://github.com/cong-or/blindsig-accel/blob/main/ROADMAP.md">roadmap</a>.</p>
